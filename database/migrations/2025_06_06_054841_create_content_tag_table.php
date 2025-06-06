@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\contentItem;
+use App\Models\ContentItem;
 use App\Models\Tag;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('content_tag', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignIdFor(contentItem::class, 'content_item_id')->constrained()->onDelete('cascade');
+            $table->foreignIdFor(ContentItem::class, 'content_item_id')->constrained()->onDelete('cascade');
             $table->foreignIdFor(Tag::class)->constrained()->onDelete('cascade');
             $table->boolean('status')->default(true);
 
