@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class ContentType extends Model
 {
+    protected $fillable = [
+
+        "name",
+        "status"
+
+    ];
     //
     // Relación: un ContentType tiene muchos ContentItems
     public function contentItems()
