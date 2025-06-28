@@ -7,35 +7,34 @@ use App\Models\ContentType;
 
 class ContentTypeRepository implements ContentTypeRepositoryInterface
 {
-    /**
-     * Create a new class instance.
-     */
-    public function __construct()
-    {
-        //
-    }
+
+    public function __construct() {}
 
     public function index()
     {
-        return ContentType::all();
+        return ContentType::where(["status" => true])->get();
     }
+
     public function getById($id)
     {
-        return ContentType::findOrFail($id);
+        return ContentType::where('id', $id)->where('status', true)->firstOrFail();
     }
+
     public function store(array $data)
     {
         return ContentType::create($data);
     }
     public function update(array $data, $id)
     {
+        $contentType = ContentType::findOrFail($id);
+        $contentType->update($data);
 
-        $contentTyoe = $this->getById($id);
-        return $contentTyoe->update($data);
+        return $contentType->fresh();
     }
+
     public function delete($id)
     {
-        $contentType = $this->getById($id);
-        return $contentType->update(['status' => false]);
+        $contentType = $this->getById($id); // Asegura que status sea true y que exista
+        return  $contentType->update(['status' => false]);
     }
 }

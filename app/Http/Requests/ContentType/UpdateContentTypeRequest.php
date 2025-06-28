@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\ContentType;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class UpdateContentTypeRequest extends FormRequest
 {
@@ -23,9 +24,15 @@ class UpdateContentTypeRequest extends FormRequest
      */
     public function rules(): array
     {
+        $id = $this->route('id');
+
         return [
-            'name' => ['required', 'min:3'],
-            'status' => ['required']
+            'name' => [
+                'required',
+                'min:3',
+                Rule::unique('content_types', 'name')->ignore($id)
+            ],
+            'status' => ['required', 'boolean']
         ];
     }
 
@@ -33,7 +40,9 @@ class UpdateContentTypeRequest extends FormRequest
     {
         return [
             'name.required' => ':attribute es requerido',
-            'status.required' =>  ':attribute es requerido'
+            'status.required' =>  ':attribute es requerido',
+            'name.unique' => 'El :attribute ya está registrado',
+            'status.boolean' => 'El :attribute debe ser true o false'
         ];
     }
 
@@ -41,7 +50,7 @@ class UpdateContentTypeRequest extends FormRequest
     {
         return [
             'name' => 'nombre',
-            'status' => 'estados'
+            'status' => 'estado'
         ];
     }
 

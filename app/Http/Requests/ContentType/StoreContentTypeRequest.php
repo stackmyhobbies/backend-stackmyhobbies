@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\ContentType;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class StoreContentTypeRequest extends FormRequest
 {
@@ -18,10 +19,15 @@ class StoreContentTypeRequest extends FormRequest
 
     public function rules(): array
     {
+
         return [
             //
-            'name' => ['required', 'min:3'],
-            'status' => ['required']
+            'name' => [
+                'required',
+                'min:3',
+                Rule::unique('content_types', 'name')
+            ],
+
         ];
     }
 
@@ -30,7 +36,7 @@ class StoreContentTypeRequest extends FormRequest
     {
         return [
             'name.required' => ':attribute es requerido',
-            'status.required' =>  ':attribute es requerido'
+            'name.unique' => 'El :attribute ya fue tomado',
         ];
     }
 
@@ -38,7 +44,6 @@ class StoreContentTypeRequest extends FormRequest
     {
         return [
             'name' => 'nombre',
-            'status' => 'estados'
         ];
     }
 
@@ -46,8 +51,8 @@ class StoreContentTypeRequest extends FormRequest
     {
         throw new HttpResponseException(response()->json([
             'success' => false,
-            'message' => 'Validation errors',
-            'data' => $validator->errors()
+            'data' => $validator->errors(),
+            'message' => 'Validation errors'
         ]));
     }
 
