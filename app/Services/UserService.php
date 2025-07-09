@@ -6,6 +6,7 @@ use App\Classes\ApiResponseClass;
 use App\Http\Resources\UserResource;
 use App\Interfaces\UserRepositoryInterface;
 use App\Repositories\UserRepository;
+use App\Support\TryCatch;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -37,37 +38,31 @@ class UserService
     public function store(array $data)
     {
 
-        try {
-            $user =  $this->_userRepository->store($data);
-            DB::commit();
+        return TryCatch::handle(function () use ($data) {
+            $user = $this->_userRepository->store($data);
             return ApiResponseClass::sendResponse(new UserResource($user), 'usuario creado exitosamente', 201);
-        } catch (\Exception $e) {
-            return ApiResponseClass::throw($e, 'No se pudo crear el usuario');
-        }
+        }, message: 'Error al crear usuarios, revise sus parametros');
     }
 
     public function update(array $data, $id)
     {
-        DB::beginTransaction();
-        try {
+
+        return TryCatch::handle(function () use ($data, $id) {
             $user =  $this->_userRepository->update($data, $id);
-            DB::commit();
-            return ApiResponseClass::sendResponse($user, 'usuario actualizado exitosamente');
-        } catch (\Exception $e) {
-            return ApiResponseClass::throw($e, 'No se pudo actualizar el usuario');
-        }
+            return ApiResponseClass::sendResponse(new UserResource($user), 'usuario actualizado exitosamente');
+        }, message: 'Error al actualizar usuario, revise su parametros', transactional: true, name_model: 'user');
     }
 
     public function destroy($id)
     {
-        try {
-            $user = $this->_userRepository->destroy($id);
-            return ApiResponseClass::sendResponse($user, 'usuario eliminado exitosamente', 204);
-        } catch (\Exception $e) {
-            if ($e instanceof ModelNotFoundException) {
-                return ApiResponseClass::sendError('user not found or could not be deleted', [], 404);
-            }
-            return ApiResponseClass::throw($e, 'No se pudo eliminar el usuario');
-        }
+        return TryCatch::handle(
+            function () use ($id) {
+                $user = $this->_userRepository->destroy($id);
+                return ApiResponseClass::sendResponse($user, 'usuario eliminado exitosamente', 204);
+            },
+            message: "No se pudo eliminar el usuario",
+            transactional: false,
+            name_model: "usuario",
+        );
     }
 }

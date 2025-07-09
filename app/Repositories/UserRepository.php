@@ -27,6 +27,7 @@ class UserRepository implements UserRepositoryInterface
     {
 
         $user = $this->show($id);
+
         $user->update($data);
 
         return $user->fresh();
@@ -36,6 +37,6 @@ class UserRepository implements UserRepositoryInterface
     {
 
         $user = $this->show($id);
-        return  $user->update(['status' => false]);
+        return $user->disable();
     }
 }

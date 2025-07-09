@@ -7,7 +7,7 @@
 
 5. ~~creare servicio~~ 
 6. ~~Crear storeRequest and updateRequest~~ 
-7. crear resource ~~ ~~ 
+7. ~~crear resource ~~  
 
 8. agregar logica de servicio index, show, create, update, delete
 
