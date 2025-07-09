@@ -7,6 +7,9 @@ use App\Models\ContentStatus;
 
 class ContentStatusRepository implements ContentStatusRepositoryInterface
 {
+
+
+
     public function index()
     {
         return ContentStatus::all();
