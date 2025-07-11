@@ -31,9 +31,11 @@ class TagService
 
     public function store(array $data)
     {
-        return TryCatch::handle(function () use ($data) {
-            return $this->_tagRepository->store($data);
-        }, 'error');
+        return TryCatch::handle(
+            function () use ($data) {
+                return $this->_tagRepository->store($data);
+            }
+        );
     }
 
     public function update(array $data, $id)
