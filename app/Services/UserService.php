@@ -41,7 +41,7 @@ class UserService
         return TryCatch::handle(function () use ($data) {
             $user = $this->_userRepository->store($data);
             return ApiResponseClass::sendResponse(new UserResource($user), 'usuario creado exitosamente', 201);
-        }, message: 'Error al crear usuarios, revise sus parametros');
+        });
     }
 
     public function update(array $data, $id)
@@ -50,7 +50,7 @@ class UserService
         return TryCatch::handle(function () use ($data, $id) {
             $user =  $this->_userRepository->update($data, $id);
             return ApiResponseClass::sendResponse(new UserResource($user), 'usuario actualizado exitosamente');
-        }, message: 'Error al actualizar usuario, revise su parametros', transactional: true, name_model: 'user');
+        });
     }
 
     public function destroy($id)
@@ -60,9 +60,7 @@ class UserService
                 $user = $this->_userRepository->destroy($id);
                 return ApiResponseClass::sendResponse($user, 'usuario eliminado exitosamente', 204);
             },
-            message: "No se pudo eliminar el usuario",
             transactional: false,
-            name_model: "usuario",
         );
     }
 }

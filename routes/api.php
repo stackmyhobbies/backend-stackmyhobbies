@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ContentStatusController;
 use App\Http\Controllers\ContentTypeController;
+use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
 use App\Models\ContentStatus;
 use Illuminate\Http\Request;
@@ -35,3 +36,10 @@ Route::get('/users/{id}', [UserController::class, 'show']);
 Route::put('/users/{id}/edit', [UserController::class, 'update']);
 
 route::delete('/users/{id}', [UserController::class, 'destroy']);
+
+
+Route::get('/tags', [TagController::class, 'index']);
+Route::get('/tags/{slug}', [TagController::class, 'show']);
+Route::post('/tags', [TagController::class, 'store']);
+Route::put('/tags/{id}/edit', [TagController::class, 'update']);
+Route::delete('/tags/{id}', [TagController::class, 'destroy']);
