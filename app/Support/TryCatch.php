@@ -9,13 +9,8 @@ use Illuminate\Support\Facades\DB;
 
 class TryCatch
 {
-    public static function handle(
-        Closure $callback,
-        string $message = 'Error',
-        bool $transactional = true,
-        string $name_model = "",
-        ?string $action = null
-    ) {
+    public static function handle(Closure $callback, bool $transactional = true)
+    {
         try {
             if ($transactional) {
                 DB::beginTransaction();
@@ -33,16 +28,7 @@ class TryCatch
                 DB::rollBack();
             }
 
-
-            if ($e instanceof ModelNotFoundException) {
-                return ApiResponseClass::sendError(
-                    message: "$name_model no puede ser encontrado",
-                    errors: [],
-                    code: 404
-                );
-            }
-
-            return ApiResponseClass::throw($e, $message);
+            throw $e;
         }
     }
 }

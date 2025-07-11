@@ -51,8 +51,8 @@ class StoreContentTypeRequest extends FormRequest
     {
         throw new HttpResponseException(response()->json([
             'success' => false,
-            'data' => $validator->errors(),
-            'message' => 'Validation errors'
+            'message' => 'Validation errors',
+            'errors' => $validator->errors()
         ]));
     }
 
