@@ -26,13 +26,13 @@ class UserService
     public function index()
     {
         $users = $this->_userRepository->index();
-        return  ApiResponseClass::sendResponse(UserResource::collection($users), 'Usuarios cargados exitosamente', Response::HTTP_OK);
+        return $users;
     }
 
     public function show($id)
     {
         $user = $this->_userRepository->show($id);
-        return ApiResponseClass::sendResponse(new UserResource($user), 'Usuario cargado exitosamente', Response::HTTP_OK);
+        return $user;
     }
 
     public function store(array $data)
@@ -40,7 +40,7 @@ class UserService
 
         return TryCatch::handle(function () use ($data) {
             $user = $this->_userRepository->store($data);
-            return ApiResponseClass::sendResponse(new UserResource($user), 'usuario creado exitosamente', 201);
+            return $user;
         });
     }
 
@@ -49,7 +49,7 @@ class UserService
 
         return TryCatch::handle(function () use ($data, $id) {
             $user =  $this->_userRepository->update($data, $id);
-            return ApiResponseClass::sendResponse(new UserResource($user), 'usuario actualizado exitosamente');
+            return $user;
         });
     }
 
@@ -57,10 +57,9 @@ class UserService
     {
         return TryCatch::handle(
             function () use ($id) {
-                $user = $this->_userRepository->destroy($id);
-                return ApiResponseClass::sendResponse($user, 'usuario eliminado exitosamente', 204);
-            },
-            transactional: false,
+                $result = $this->_userRepository->destroy($id);
+                return $result;
+            }
         );
     }
 }

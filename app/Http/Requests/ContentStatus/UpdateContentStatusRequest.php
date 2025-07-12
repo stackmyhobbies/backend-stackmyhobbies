@@ -5,6 +5,7 @@ namespace App\Http\Requests\ContentStatus;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class UpdateContentStatusRequest extends FormRequest
 {
@@ -21,23 +22,18 @@ class UpdateContentStatusRequest extends FormRequest
      */
     public function rules(): array
     {
+        $id = $this->route('id');
         return [
             'name' => [
                 'required',
-                'min:3'
+                'min:3',
+                Rule::unique('content_statuses')->ignore($id)
             ],
             'status' => ['required', 'boolean']
         ];
     }
 
-    public function messages()
-    {
-        return [
-            'name.required' => ':attribute es requerido',
-            'status.required' =>  ':attribute es requerido',
-            'status.boolean' => 'El :attribute debe ser true o false'
-        ];
-    }
+
 
     public function attributes()
     {

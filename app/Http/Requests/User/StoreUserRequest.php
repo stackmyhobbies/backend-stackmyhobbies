@@ -33,28 +33,6 @@ class StoreUserRequest extends FormRequest
         ];
     }
 
-    public function messages()
-    {
-        return [
-            'first_name.required' => 'El :attribute es requerido',
-            'first_name.min' => 'El :attribute debe tener al menos :min caracteres',
-
-            'last_name.required' => 'El :attribute es requerido',
-            'last_name.min' => 'El :attribute debe tener al menos :min caracteres',
-
-            'username.required' => 'El :attribute es requerido',
-            'username.min' => 'El :attribute debe tener al menos :min caracteres',
-            'username.unique' => 'El :attribute ya fue tomado',
-
-            'email.required' => 'El :attribute es requerido',
-            'email.email' => 'El :attribute debe ser una dirección de correo válida',
-            'email.unique' => 'El :attribute ya fue tomado',
-
-            'password.required' => 'La :attribute es requerida',
-            'password.min' => 'La :attribute debe tener al menos :min caracteres',
-        ];
-    }
-
 
     public function attributes()
     {

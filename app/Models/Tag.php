@@ -21,6 +21,11 @@ class Tag extends Model
         ];
     }
 
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = strtolower($value);
+    }
+
     public function contentItems()
     {
         return $this->belongsToMany(ContentItem::class, 'content_tag', 'tag_id', 'content_item_id')

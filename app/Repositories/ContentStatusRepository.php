@@ -33,7 +33,7 @@ class ContentStatusRepository implements ContentStatusRepositoryInterface
         return $contentStatus->fresh();
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         $contentType = $this->show($id); // Asegura que status sea true y que exista
         return  $contentType->update(['status' => false]);

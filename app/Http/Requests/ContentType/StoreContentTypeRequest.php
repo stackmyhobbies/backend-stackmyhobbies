@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\ContentType;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class StoreContentTypeRequest extends FormRequest
@@ -25,20 +26,15 @@ class StoreContentTypeRequest extends FormRequest
             'name' => [
                 'required',
                 'min:3',
-                Rule::unique('content_types', 'name')
+                'unique:content_types,name'
             ],
 
         ];
     }
 
 
-    public function messages()
-    {
-        return [
-            'name.required' => ':attribute es requerido',
-            'name.unique' => 'El :attribute ya fue tomado',
-        ];
-    }
+
+
 
     public function attributes()
     {
@@ -55,6 +51,22 @@ class StoreContentTypeRequest extends FormRequest
             'errors' => $validator->errors()
         ]));
     }
+
+    //** for sqlite */
+    // public function withValidator(Validator $validator)
+    // {
+    //     $validator->after(function ($validator) {
+    //         $name = strtolower($this->input('name'));
+
+    //         $exists = DB::table('content_types')
+    //             ->whereRaw('LOWER(name) = ?', [$name])
+    //             ->exists();
+
+    //         if ($exists) {
+    //             $validator->errors()->add('name', 'El nombre ya fue tomado');
+    //         }
+    //     });
+    // }
 
     /**
      * Get the validation rules that apply to the request.

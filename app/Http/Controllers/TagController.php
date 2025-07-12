@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Classes\ApiResponseClass;
 use App\Http\Requests\Tag\StoreTagRequest;
 use App\Http\Requests\Tag\UpdateTagRequest;
+use App\Http\Resources\TagResource;
 use App\Services\TagService;
 use App\Support\TryHttpCatch;
 use Illuminate\Http\Request;
@@ -51,7 +52,7 @@ class TagController extends Controller
     public function show(string $slug)
     {
         $tag = $this->_tagService->show($slug);
-        return ApiResponseClass::sendResponse($tag, 'etiqueta cargada con exito', Response::HTTP_OK);
+        return ApiResponseClass::sendResponse(new TagResource($tag), 'Tag loaded successfully', Response::HTTP_OK);
     }
 
     /**
