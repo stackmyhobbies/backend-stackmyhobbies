@@ -33,14 +33,7 @@ class StoreContentTypeRequest extends FormRequest
     }
 
 
-    public function messages()
-    {
-        return [
-            'name.required' => 'El :attribute es requerido',
-            'name.min' => 'El :attribute debe tener al menos :min caracteres',
-            'name.unique' => 'el :attribute fue tomado'
-        ];
-    }
+
 
 
     public function attributes()

@@ -34,15 +34,6 @@ class StoreTagRequest extends FormRequest
         ];
     }
 
-
-    public function messages()
-    {
-        return [
-            'name.required' => 'El :attribute es requerido',
-            'name.unique' => 'El :attribute ya fue tomado',
-        ];
-    }
-
     public function attributes()
     {
         return [

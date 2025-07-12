@@ -25,8 +25,7 @@ class TagService
 
     public function show($slug)
     {
-        $tag = $this->_tagRepository->show($slug);
-        return $tag;
+        return $this->_tagRepository->show($slug);
     }
 
     public function store(array $data)

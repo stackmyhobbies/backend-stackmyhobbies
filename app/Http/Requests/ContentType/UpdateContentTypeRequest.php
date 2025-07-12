@@ -36,16 +36,6 @@ class UpdateContentTypeRequest extends FormRequest
         ];
     }
 
-    public function messages()
-    {
-        return [
-            'name.required' => ':attribute es requerido',
-            'status.required' =>  ':attribute es requerido',
-            'name.unique' => 'El :attribute ya está registrado',
-            'status.boolean' => 'El :attribute debe ser true o false'
-        ];
-    }
-
     public function attributes()
     {
         return [
