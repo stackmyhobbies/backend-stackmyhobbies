@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Classes\ApiResponseClass;
 use App\Http\Requests\ContentType\StoreContentTypeRequest;
 use App\Http\Requests\ContentType\UpdateContentTypeRequest;
-use App\Http\Resources\ContentTypeResource;
+use App\Http\Resources\ContentType\ContentTypeResource;
 use App\Http\Resources\TagResource;
 use App\Models\ContentType;
 use App\Services\ContentTypeService;

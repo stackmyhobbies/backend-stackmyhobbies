@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Classes\ApiResponseClass;
 use App\Http\Requests\ContentStatus\StoreContentStatusRequest;
 use App\Http\Requests\ContentStatus\UpdateContentStatusRequest;
-use App\Http\Resources\ContentStatusResource;
+use App\Http\Resources\ContentStatus\ContentStatusResource;
 use App\Services\ContentStatusService;
 use App\Support\TryHttpCatch;
 use Illuminate\Http\Request;

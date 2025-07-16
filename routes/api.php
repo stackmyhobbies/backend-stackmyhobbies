@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContentItemController;
 use App\Http\Controllers\ContentStatusController;
 use App\Http\Controllers\ContentTypeController;
 use App\Http\Controllers\TagController;
@@ -43,3 +44,10 @@ Route::get('/tags/{slug}', [TagController::class, 'show']);
 Route::post('/tags', [TagController::class, 'store']);
 Route::put('/tags/{id}/edit', [TagController::class, 'update']);
 Route::delete('/tags/{id}', [TagController::class, 'destroy']);
+
+
+Route::get('/content-items', [ContentItemController::class, 'index']);
+Route::post('/content-items', [ContentItemController::class, 'store']);
+Route::get('/content-items/{slug}', [ContentItemController::class, 'show']);
+Route::put('/content-items/{id}/edit', [ContentItemController::class, 'update']);
+Route::delete('/content-items/{id}', [ContentItemController::class, 'destroy']);

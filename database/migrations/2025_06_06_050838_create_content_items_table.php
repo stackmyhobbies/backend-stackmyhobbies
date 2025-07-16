@@ -17,22 +17,30 @@ return new class extends Migration
     {
         Schema::create('content_items', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->string('slug')->unique();
 
-            //**  Llaves foraneas **//
-            $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
-            $table->foreignIdFor(ContentType::class, 'type_id')->constrained('content_types')->onDelete('cascade');
-            $table->foreignIdFor(ContentStatus::class, 'status_id')->constrained('content_statuses')->onDelete('cascade');
 
             //** Campos principales
-            $table->string('title', 255);
             $table->text('description')->nullable();
             $table->string('image_url', 255)->nullable();
             $table->dateTime('start_date')->nullable();
             $table->dateTime('end_date')->nullable();
             $table->integer('current_progress')->nullable();
             $table->integer('total_progress')->nullable();
+            $table->enum('progress_unit', ['episodios', 'paginas', 'minutos'])->default('episodios');
             $table->integer('rating')->nullable();
             $table->text('notes')->nullable();
+
+            //**  Llaves foraneas **//
+            $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
+            $table->foreignIdFor(ContentType::class, 'type_id')->constrained('content_types')->onDelete('cascade');
+            $table->foreignIdFor(ContentStatus::class, 'status_id')->constrained('content_statuses')->onDelete('cascade');
+
+
+            $table->enum('segment_type', ['season', 'volume', 'part', 'edition', 'movie'])->nullable()->after('status_id');
+            $table->unsignedInteger('segment_number')->nullable()->after('segment_type');
+
             $table->boolean('status')->default(true);
 
 

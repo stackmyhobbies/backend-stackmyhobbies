@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Interfaces\TagRepositoryInterface;
+use App\Models\ContentTag;
 use App\Models\Tag;
 
 class TagRepository implements TagRepositoryInterface
@@ -36,6 +37,11 @@ class TagRepository implements TagRepositoryInterface
     public function destroy($id)
     {
         $tag = Tag::where('status', $this->active)->where('id', $id)->firstOrFail();
-        return  $tag->update(['status' => !$this->active]);
+        $tag->update(['status' => !$this->active]);
+
+        ContentTag::where('tag_id', $tag->id)
+            ->update(['status' => !$this->active]);
+
+        return $tag;
     }
 }

@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Interfaces\ContentItemRepositoryInterface;
 use App\Interfaces\ContentStatusRepositoryInterface;
 use App\Interfaces\ContentTypeRepositoryInterface;
 use App\Interfaces\TagRepositoryInterface;
 use App\Interfaces\UserRepositoryInterface;
+use App\Repositories\ContentItemRepository;
 use App\Repositories\ContentStatusRepository;
 use App\Repositories\ContentTypeRepository;
 use App\Repositories\TagRepository;
@@ -20,8 +22,9 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
-        $this->app->bind(ContentTypeRepositoryInterface::class, ContentTypeRepository::class);
+        $this->app->bind(ContentItemRepositoryInterface::class, ContentItemRepository::class);
         $this->app->bind(ContentStatusRepositoryInterface::class, ContentStatusRepository::class);
+        $this->app->bind(ContentTypeRepositoryInterface::class, ContentTypeRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(TagRepositoryInterface::class, TagRepository::class);
     }
