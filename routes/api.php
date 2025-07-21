@@ -1,17 +1,15 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\SessionController;
 use App\Http\Controllers\ContentItemController;
 use App\Http\Controllers\ContentStatusController;
 use App\Http\Controllers\ContentTypeController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
-use App\Models\ContentStatus;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+
 
 Route::get('/content-types', [ContentTypeController::class, 'index']);
 
@@ -51,3 +49,42 @@ Route::post('/content-items', [ContentItemController::class, 'store']);
 Route::get('/content-items/{slug}', [ContentItemController::class, 'show']);
 Route::put('/content-items/{id}/edit', [ContentItemController::class, 'update']);
 Route::delete('/content-items/{id}', [ContentItemController::class, 'destroy']);
+
+
+Route::post('/auth/sign-in', [SessionController::class, 'store'])->name('login');
+Route::post('/auth/sign-up', RegisterController::class);
+
+Route::middleware(['auth:sanctum'])->group(function () {
+
+    Route::post('/auth/sign-out', [SessionController::class, 'destroy']);
+
+    Route::get('/tags', [TagController::class, 'index']);
+    Route::middleware(['is_admin'])->group(function () {});
+
+    // otras rutas...
+});
+
+
+// // Rutas públicas
+// Route::get('/content-items', [ContentItemController::class, 'index']);
+// Route::get('/content-items/{slug}', [ContentItemController::class, 'show']);
+// Route::post('/auth/sign-in', [SessionController::class, 'store']);
+// Route::post('/auth/sign-up', RegisterController::class);
+
+// // Rutas autenticadas
+// Route::middleware(['auth:sanctum'])->group(function () {
+//     Route::post('/auth/sign-out', [SessionController::class, 'destroy']);
+
+//     // ContentItems: accesos controlados por policies
+//     Route::post('/content-items', [ContentItemController::class, 'store']);
+//     Route::put('/content-items/{id}/edit', [ContentItemController::class, 'update']);
+//     Route::delete('/content-items/{id}', [ContentItemController::class, 'destroy']);
+
+//     // Rutas solo para administradores
+//     Route::middleware(['is_admin'])->group(function () {
+//         Route::resource('/content-types', ContentTypeController::class)->except('show');
+//         Route::resource('/content-statuses', ContentStatusController::class)->except('show');
+//         Route::resource('/tags', TagController::class)->except('show');
+//         Route::resource('/users', UserController::class);
+//     });
+// });

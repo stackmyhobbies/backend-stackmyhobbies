@@ -8,7 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 use App\Classes\ApiResponseClass;
 use App\Exceptions\Database\DatabaseConstraintHandler;
-
+use Illuminate\Auth\AuthenticationException;
 
 class TryHttpCatch
 {
@@ -20,7 +20,10 @@ class TryHttpCatch
             return $e->getResponse();
         } catch (ModelNotFoundException $e) {
             return ApiResponseClass::sendError('Recurso no encontrado', [], 404);
+        } catch (AuthenticationException $e) {
+            return ApiResponseClass::sendError($e->getMessage(), [], 401);
         } catch (\Exception $e) {
+            dd($e);
             return self::handleExceptionByCode($e, $message);
         }
     }
@@ -33,7 +36,6 @@ class TryHttpCatch
 
         return match ($code) {
             23505 => DatabaseConstraintHandler::handleUniqueConstraint($e),
-            404 => ApiResponseClass::sendError('Recurso no encontrado', [], 404),
             default => ApiResponseClass::throw($e, $message)
         };
     }
