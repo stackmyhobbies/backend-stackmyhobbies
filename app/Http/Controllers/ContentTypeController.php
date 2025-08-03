@@ -12,6 +12,7 @@ use App\Services\ContentTypeService;
 use App\Support\TryHttpCatch;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class ContentTypeController extends Controller
 {
@@ -25,11 +26,12 @@ class ContentTypeController extends Controller
 
     public function index()
     {
+
         return TryHttpCatch::handle(
             function () {
                 $contentTypes = $this->_contentTypeService->index();
                 return ApiResponseClass::sendResponse(
-                    result: TagResource::collection($contentTypes),
+                    result: ContentTypeResource::collection($contentTypes),
                     message: 'Types loaded successfully',
                     code: Response::HTTP_OK
                 );
@@ -53,7 +55,7 @@ class ContentTypeController extends Controller
         return TryHttpCatch::handle(
             function () use ($validated) {
                 $contentType = $this->_contentTypeService->store($validated);
-                return ApiResponseClass::sendResponse($contentType, 'Eqieuta creada exitosamnete', Response::HTTP_CREATED);
+                return ApiResponseClass::sendResponse(new ContentTypeResource($contentType), 'Eqieuta creada exitosamnete', Response::HTTP_CREATED);
             }
         );
     }

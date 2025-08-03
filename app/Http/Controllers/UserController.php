@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Classes\ApiResponseClass;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
+use App\Http\Resources\UserResource;
 use App\Services\UserService;
 use App\Support\TryHttpCatch;
 use Illuminate\Http\Request;
@@ -23,14 +24,14 @@ class UserController extends Controller
     {
         return TryHttpCatch::handle(function () {
             $users =  $this->userService->index();
-            return ApiResponseClass::sendResponse($users, "Users loaded successfully", Response::HTTP_OK);
+            return ApiResponseClass::sendResponse(UserResource::collection($users), "Users loaded successfully", Response::HTTP_OK);
         });
     }
 
     public function show($id)
     {
         $user = $this->userService->show($id);
-        return ApiResponseClass::sendResponse($user, "User loaded successfully.", Response::HTTP_OK);
+        return ApiResponseClass::sendResponse(new UserResource($user), "User loaded successfully.", Response::HTTP_OK);
     }
 
     public function store(StoreUserRequest $request)
@@ -40,7 +41,7 @@ class UserController extends Controller
         return TryHttpCatch::handle(
             function () use ($validated) {
                 $user = $this->userService->store($validated);
-                return ApiResponseClass::sendResponse($user, 'User created successfully.', Response::HTTP_CREATED);
+                return ApiResponseClass::sendResponse(new UserResource($user), 'User created successfully.', Response::HTTP_CREATED);
             }
         );
     }
@@ -51,7 +52,7 @@ class UserController extends Controller
         return TryHttpCatch::handle(
             function () use ($validated, $id) {
                 $user = $this->userService->update($validated, $id);
-                return ApiResponseClass::sendResponse($user, 'User updated successfully.', Response::HTTP_OK);
+                return ApiResponseClass::sendResponse(new UserResource($user), 'User updated successfully.', Response::HTTP_OK);
             }
         );
     }

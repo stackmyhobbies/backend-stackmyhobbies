@@ -36,7 +36,6 @@ class ContentItemRepository implements ContentItemRepositoryInterface
         }
 
         return $query->where('status', $this->active)->get();
-        // return $query->get();
     }
 
     public function show($slug)

@@ -13,32 +13,35 @@ use Illuminate\Support\Facades\DB;
 
 class ContentStatusService
 {
-    /**
-     * Create a new class instance.
-     */
 
-    protected ContentStatusRepositoryInterface $_contentStatusRepository;
+    public function __construct(private ContentStatusRepositoryInterface $contentStatusRepository) {}
 
-    public function __construct(ContentStatusRepositoryInterface $contentStatusRepository)
+
+    public function indexForUser()
     {
-        $this->_contentStatusRepository = $contentStatusRepository;
+        return $this->contentStatusRepository->indexForUser();
     }
 
-    public function index()
+
+    public function index(?array $filters = [], ?int $perPage = null)
     {
-        return $this->_contentStatusRepository->index();
+        return TryCatch::handle(
+            function () use ($filters, $perPage) {
+                return $this->contentStatusRepository->index(null, $filters, $perPage);
+            }
+        );
     }
 
     public function show($id)
     {
-        return $this->_contentStatusRepository->show($id);
+        return $this->contentStatusRepository->show($id);
     }
 
     public function store(array $data)
     {
         return TryCatch::handle(
             function () use ($data) {
-                return $this->_contentStatusRepository->store($data);
+                return $this->contentStatusRepository->store($data);
             }
         );
     }
@@ -48,7 +51,7 @@ class ContentStatusService
 
         return TryCatch::handle(
             function () use ($data, $id) {
-                return $this->_contentStatusRepository->update($data, $id);
+                return $this->contentStatusRepository->update($data, $id);
             }
         );
     }
@@ -57,7 +60,7 @@ class ContentStatusService
     {
         return TryCatch::handle(
             function () use ($id) {
-                return $this->_contentStatusRepository->destroy($id);
+                return $this->contentStatusRepository->destroy($id);
             }
         );
     }

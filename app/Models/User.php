@@ -39,6 +39,8 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+
+
     public function disable()
     {
         $this->update(['status' => false]);

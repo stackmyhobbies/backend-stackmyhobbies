@@ -17,19 +17,16 @@ class TagController extends Controller
      * Display a listing of the resource.
      */
 
-    protected TagService $_tagService;
 
-    public function __construct(TagService $tagService)
-    {
-        $this->_tagService = $tagService;
-    }
+
+    public function __construct(private TagService $tagService) {}
 
 
     public function index()
     {
         return TryHttpCatch::handle(
             function () {
-                $tags = $this->_tagService->index();
+                $tags = $this->tagService->index();
                 return ApiResponseClass::sendResponse($tags, 'etiquetas cargadas exitosamente', Response::HTTP_OK);
             }
         );
@@ -40,7 +37,7 @@ class TagController extends Controller
         $validated = $request->validated();
         return TryHttpCatch::handle(
             function () use ($validated) {
-                $tag = $this->_tagService->store($validated);
+                $tag = $this->tagService->store($validated);
                 return ApiResponseClass::sendResponse($tag, 'Eqieuta creada exitosamnete', Response::HTTP_CREATED);
             }
         );
@@ -51,7 +48,7 @@ class TagController extends Controller
      */
     public function show(string $slug)
     {
-        $tag = $this->_tagService->show($slug);
+        $tag = $this->tagService->show($slug);
         return ApiResponseClass::sendResponse(new TagResource($tag), 'Tag loaded successfully', Response::HTTP_OK);
     }
 
@@ -63,7 +60,7 @@ class TagController extends Controller
         $validated = $request->validated();
         return TryHttpCatch::handle(
             function () use ($validated, $id) {
-                $tag = $this->_tagService->update($validated, $id);
+                $tag = $this->tagService->update($validated, $id);
                 return ApiResponseClass::sendResponse($tag, 'etiqueta actualizada con exito', Response::HTTP_OK);
             }
         );
@@ -76,7 +73,7 @@ class TagController extends Controller
     {
         return TryHttpCatch::handle(
             function () use ($id) {
-                $this->_tagService->destroy($id);
+                $this->tagService->destroy($id);
                 return ApiResponseClass::sendResponse(null, 'Etiqueta eliminada con éxito', Response::HTTP_OK);
             }
         );
