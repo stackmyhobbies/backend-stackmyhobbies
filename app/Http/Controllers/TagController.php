@@ -5,29 +5,52 @@ namespace App\Http\Controllers;
 use App\Classes\ApiResponseClass;
 use App\Http\Requests\Tag\StoreTagRequest;
 use App\Http\Requests\Tag\UpdateTagRequest;
+use App\Http\Resources\ContentItemLiteResource;
 use App\Http\Resources\TagResource;
 use App\Services\TagService;
+use App\Support\PaginationHelper;
 use App\Support\TryHttpCatch;
+
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class TagController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-
-
-
     public function __construct(private TagService $tagService) {}
 
-
-    public function index()
+    public function indexForUser()
     {
         return TryHttpCatch::handle(
             function () {
-                $tags = $this->tagService->index();
-                return ApiResponseClass::sendResponse($tags, 'etiquetas cargadas exitosamente', Response::HTTP_OK);
+                $tags = $this->tagService->indexForUser();
+                return ApiResponseClass::sendResponse(
+                    result: TagResource::collection($tags),
+                    message: "Tags loaded successfully",
+                    code: Response::HTTP_OK
+                );
+            }
+        );
+    }
+
+    public function index(Request $request)
+    {
+        $perPage = $request->input('per_page');
+        return TryHttpCatch::handle(
+            function () use ($perPage) {
+                $tags = $this->tagService->index(null, $perPage);
+                $result = $perPage > 0
+                    ? [
+                        'items' => TagResource::collection($tags),
+                        'meta_data' => PaginationHelper::meta($tags),
+                    ]
+                    : TagResource::collection($tags);
+
+                return ApiResponseClass::sendResponse(
+                    result: $result,
+                    message: 'Tags loaded successfully',
+                    code: Response::HTTP_OK
+                );
             }
         );
     }
@@ -50,6 +73,34 @@ class TagController extends Controller
     {
         $tag = $this->tagService->show($slug);
         return ApiResponseClass::sendResponse(new TagResource($tag), 'Tag loaded successfully', Response::HTTP_OK);
+    }
+
+    public function showForUser(string $slug)
+    {
+        $userId = Auth::user()->id;
+
+        $tag = $this->tagService->showForUser($slug, $userId);
+
+        return ApiResponseClass::sendResponse(new TagResource($tag), 'Tag loaded successfully', Response::HTTP_OK);
+    }
+
+    public function showTagWithContentItem(string $slug, Request $request)
+    {
+
+        $perPage = $request->input('per_page');
+        $userId = Auth::user()->id;
+
+        return TryHttpCatch::handle(function () use ($perPage, $userId, $slug) {
+            $tag = $this->tagService->showTagWithContentItem($slug, $userId, $perPage);
+            $result = $perPage > 0
+                ? [
+                    'items' => ContentItemLiteResource::collection($tag),
+                    'meta_data' => PaginationHelper::meta($tag),
+                ]
+                : ContentItemLiteResource::collection($tag);
+
+            return ApiResponseClass::sendResponse($result, "", 200);
+        });
     }
 
     /**

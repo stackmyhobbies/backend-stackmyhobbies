@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             TagSeeder::class,
             ContentStatusSeeder::class,
             ContentTypeSeeder::class,
-            // ContentItemSeeder::class
+            ContentItemSeeder::class
         ]);
     }
 }

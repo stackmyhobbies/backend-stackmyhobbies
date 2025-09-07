@@ -7,7 +7,6 @@ use App\Http\Controllers\ContentStatusController;
 use App\Http\Controllers\ContentTypeController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
-use App\Models\ContentStatus;
 use Illuminate\Support\Facades\Route;
 
 
@@ -27,18 +26,19 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/content-items/{id}/edit', [ContentItemController::class, 'update']);
     Route::delete('/content-items/{id}', [ContentItemController::class, 'destroy']);
 
-
-    //**TODO Crear ruta admin */
-    //** ruta privada que son necesaria para el usuario para crear o consultar content-items
-    Route::get('/tags', [TagController::class, 'index']);  //* usado para carga select o checkbox
-    Route::get('/tags/{slug}', [TagController::class, 'show']); //* para visualizar content-items perteneciente a un tag en especifico
-
     Route::get('/content-statuses', [ContentStatusController::class, 'indexForUser']);
-    Route::get('/content-types', [ContentTypeController::class, 'index']); //* usado para carga select
+    Route::get('/content-types', [ContentTypeController::class, 'indexForUser']);
+
+    Route::get('/tags', [TagController::class, 'indexForUser']);
+    Route::get('/tags/{slug}', [TagController::class, 'showForUser']);
+    Route::get('/tags/{slug}/content-items', [TagController::class, 'showTagWithContentItem']);
+
+
 
     Route::prefix('admin')->middleware(['is_admin'])->group(function () {
 
         //** types 😠
+        Route::get('/content-types', [ContentTypeController::class, 'index']);
         Route::get('/content-types/{id}', [ContentTypeController::class, 'show']);
         Route::post('/content-types', [ContentTypeController::class, 'store']);
         Route::put('/content-types/{id}/edit', [ContentTypeController::class, 'update']);
@@ -59,8 +59,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::delete('/content-statuses/{id}', [ContentStatusController::class, 'destroy']);
 
         //*tags
+        Route::get('/tags', [TagController::class, 'index']);
         Route::post('/tags', [TagController::class, 'store']);
         Route::put('/tags/{id}/edit', [TagController::class, 'update']);
         Route::delete('/tags/{id}', [TagController::class, 'destroy']);
+        Route::get('/tags/{slug}', [TagController::class, 'show']);
     });
 });

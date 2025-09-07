@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 class ContentItemRepository implements ContentItemRepositoryInterface
 {
 
+
+    //TODO Agregar el user_id para consultas
     protected $active = true;
 
     private function getContentItemById($id)
@@ -32,10 +34,31 @@ class ContentItemRepository implements ContentItemRepositoryInterface
         }
 
         if ($perPage) {
-            return $query->where('status', $this->active)->paginate($perPage);
+            return $query->paginate($perPage);
         }
 
-        return $query->where('status', $this->active)->get();
+        return $query->get();
+    }
+
+    public function indexForUser(?string $user_id, array $with = [], array $filters = [], ?int $perPage = null)
+    {
+        $query = ContentItem::query();
+
+        if (!empty($with)) {
+            $query->with($with);
+        }
+
+        if (!empty($filters)) {
+            foreach ($filters as $field => $value) {
+                $query->where($field, $value);
+            }
+        }
+
+        if ($perPage) {
+            return $query->where('user_id', $user_id)->where('status', $this->active)->paginate($perPage);
+        }
+
+        return $query->where('user_id', $user_id)->where('status', $this->active)->get();
     }
 
     public function show($slug)

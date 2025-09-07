@@ -23,7 +23,7 @@ class TryHttpCatch
         } catch (AuthenticationException $e) {
             return ApiResponseClass::sendError($e->getMessage(), [], 401);
         } catch (\Exception $e) {
-            dd($e);
+
             return self::handleExceptionByCode($e, $message);
         }
     }
