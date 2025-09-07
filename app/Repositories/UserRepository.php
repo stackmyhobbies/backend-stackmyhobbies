@@ -15,7 +15,7 @@ class UserRepository implements UserRepositoryInterface
     public function show($id)
     {
 
-        return User::where('id', $id)->where('status', true)->firstOrFail();
+        return User::where('id', $id)->firstOrFail();
     }
 
     public function store(array $data)

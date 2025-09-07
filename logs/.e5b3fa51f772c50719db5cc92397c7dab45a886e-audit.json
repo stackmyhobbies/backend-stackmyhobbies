@@ -1,0 +1,30 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/home/hyo/Documentos/12-proyectos/01-stackmyhobbies/backend-stackmyhobbies/logs/.e5b3fa51f772c50719db5cc92397c7dab45a886e-audit.json",
+    "files": [
+        {
+            "date": 1756954661241,
+            "name": "/home/hyo/Documentos/12-proyectos/01-stackmyhobbies/backend-stackmyhobbies/logs/mcp-puppeteer-2025-09-03.log",
+            "hash": "237320c1e6b2db8f2dbfe5251e4d733459ee075f4e43e823d0caf8cd09871522"
+        },
+        {
+            "date": 1756963388892,
+            "name": "/home/hyo/Documentos/12-proyectos/01-stackmyhobbies/backend-stackmyhobbies/logs/mcp-puppeteer-2025-09-04.log",
+            "hash": "4a55c5d8c764048f6dc5f145ff53c93464e2e43c3a8708d42177dc5099edf08c"
+        },
+        {
+            "date": 1757127135878,
+            "name": "/home/hyo/Documentos/12-proyectos/01-stackmyhobbies/backend-stackmyhobbies/logs/mcp-puppeteer-2025-09-05.log",
+            "hash": "890c206193f22bdc838242555a50682c25bc46b5d73b406152f3662d2ec22f8d"
+        },
+        {
+            "date": 1757213487514,
+            "name": "/home/hyo/Documentos/12-proyectos/01-stackmyhobbies/backend-stackmyhobbies/logs/mcp-puppeteer-2025-09-06.log",
+            "hash": "223b9f22d3d54e4ee49d902186bf37dfa8cc90fd6b3288a6f1576d6f444aa6a2"
+        }
+    ],
+    "hashType": "sha256"
+}

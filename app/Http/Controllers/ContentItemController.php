@@ -31,6 +31,7 @@ class ContentItemController extends Controller
     public function index(Request $request)
     {
 
+        // ?Para indicarle como debe venir
         // ?with=tags,contentType,contentStatus
         // $with = array_filter(explode(',', $request->query('with', '')));
 
@@ -40,6 +41,7 @@ class ContentItemController extends Controller
         return TryHttpCatch::handle(
             function () use ($perPage) {
                 $content_items = $this->_contentItemService->index([], $perPage);
+
                 return ApiResponseClass::sendResponse(
                     [
                         "items" => ContentItemResource::collection($content_items),

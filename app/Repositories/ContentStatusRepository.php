@@ -4,20 +4,42 @@ namespace App\Repositories;
 
 use App\Interfaces\ContentStatusRepositoryInterface;
 use App\Models\ContentStatus;
+use Illuminate\Mail\Mailables\Content;
 
 class ContentStatusRepository implements ContentStatusRepositoryInterface
 {
 
-
-
-    public function index()
+    private $active = true;
+    public function indexForUser()
     {
-        return ContentStatus::all();
+        return ContentStatus::where('status', $this->active)->get();
+    }
+
+
+    public function index(?array $with = [], ?array $filters = [], ?int $perPage = null)
+    {
+        $query = ContentStatus::query();
+
+        if (!empty($with)) {
+            $query->with($with);
+        }
+
+        if (!empty($filters)) {
+            foreach ($filters as $field => $value) {
+                $query->where($field, $value);
+            }
+        }
+
+        if ($perPage) {
+            return $query->paginate($perPage);
+        }
+
+        return $query->get();
     }
 
     public function show($id)
     {
-        return ContentStatus::where('id', $id)->where('status', true)->firstOrFail();
+        return ContentStatus::where('id', $id)->firstOrFail();
     }
 
     public function store(array $data)

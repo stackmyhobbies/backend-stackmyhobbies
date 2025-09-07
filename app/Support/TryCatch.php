@@ -28,7 +28,7 @@ class TryCatch
             if ($transactional) {
                 DB::rollBack();
             }
-            dd($e);
+
             throw $e;
         }
     }

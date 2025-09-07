@@ -7,24 +7,23 @@ use App\Http\Requests\ContentStatus\StoreContentStatusRequest;
 use App\Http\Requests\ContentStatus\UpdateContentStatusRequest;
 use App\Http\Resources\ContentStatus\ContentStatusResource;
 use App\Services\ContentStatusService;
+use App\Support\PaginationHelper;
 use App\Support\TryHttpCatch;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class ContentStatusController extends Controller
 {
-    protected ContentStatusService $_contentStatusService;
 
-    public function __construct(ContentStatusService $contentStatusService)
-    {
-        $this->_contentStatusService = $contentStatusService;
-    }
 
-    public function index()
+    public function __construct(private ContentStatusService $contentStatusService) {}
+
+
+    public function indexForUser()
     {
         return TryHttpCatch::handle(
             function () {
-                $content_statuses = $this->_contentStatusService->index();
+                $content_statuses = $this->contentStatusService->indexForUser();
                 return ApiResponseClass::sendResponse(
                     result: ContentStatusResource::collection($content_statuses),
                     message: "statuses loaded successfully",
@@ -34,9 +33,32 @@ class ContentStatusController extends Controller
         );
     }
 
+    public function index(Request $request)
+    {
+        $perPage = $request->input('per_page');
+
+        return TryHttpCatch::handle(
+            function () use ($perPage) {
+                $content_statuses = $this->contentStatusService->index(null, $perPage);
+                $result = $perPage > 0
+                    ? [
+                        'items' => ContentStatusResource::collection($content_statuses),
+                        'meta_data' => PaginationHelper::meta($content_statuses),
+                    ]
+                    : ContentStatusResource::collection($content_statuses);
+
+                return ApiResponseClass::sendResponse(
+                    result: $result,
+                    message: "statuses loaded successfully",
+                    code: Response::HTTP_OK
+                );
+            }
+        );
+    }
+
     public function show($id)
     {
-        $content_status = $this->_contentStatusService->show($id);
+        $content_status = $this->contentStatusService->show($id);
         return ApiResponseClass::sendResponse(
             result: new ContentStatusResource($content_status),
             message: "status loaded successfully",
@@ -49,7 +71,7 @@ class ContentStatusController extends Controller
         $validated = $request->validated();
         return TryHttpCatch::handle(
             function () use ($validated) {
-                $content_status = $this->_contentStatusService->store($validated);
+                $content_status = $this->contentStatusService->store($validated);
                 return ApiResponseClass::sendResponse(
                     result: new ContentStatusResource($content_status),
                     message: "status created successfully",
@@ -67,7 +89,7 @@ class ContentStatusController extends Controller
 
         return TryHttpCatch::handle(
             function () use ($validated, $id) {
-                $content_status = $this->_contentStatusService->update($validated, $id);
+                $content_status = $this->contentStatusService->update($validated, $id);
                 return ApiResponseClass::sendResponse(
                     result: new ContentStatusResource($content_status),
                     message: "status updated successfully",
@@ -83,7 +105,7 @@ class ContentStatusController extends Controller
 
         return TryHttpCatch::handle(
             function () use ($id) {
-                $this->_contentStatusService->destroy($id);
+                $this->contentStatusService->destroy($id);
                 return ApiResponseClass::sendResponse(
                     result: null,
                     message: "status deleted successfully",
