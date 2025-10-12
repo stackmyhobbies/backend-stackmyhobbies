@@ -24,12 +24,14 @@ class UpdateContentItemRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+
+    /* TODO ELIMINAR EL USER DE LA REQUEST */
     public function rules(): array
     {
 
 
         return [
-            'user_id' => ['required', 'exists:users,id'],
+
             'title' => [
                 'required',
                 'string',
@@ -57,7 +59,7 @@ class UpdateContentItemRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'user_id' => 'usuario',
+
             'title' => 'título',
             'description' => 'descripción',
             'type_id' => 'tipo de contenido',

@@ -24,10 +24,10 @@ class StoreContentItemRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+    /* TODO APLICAR REGLA GNERAL ELIMINAR EL USER_ID DE LA REQUEST*/
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'exists:users,id'],
             'title' => [
                 'required',
                 'string',
@@ -55,7 +55,6 @@ class StoreContentItemRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'user_id' => 'usuario',
             'title' => 'título',
             'description' => 'descripción',
             'type_id' => 'tipo de contenido',

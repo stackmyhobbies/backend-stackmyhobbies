@@ -20,10 +20,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/auth/sign-out', [SessionController::class, 'destroy']);
 
     //* ruta privada autenticada para gestionar el item
-    Route::get('/content-items', [ContentItemController::class, 'index']);
-    Route::post('/content-items', [ContentItemController::class, 'store']);
+    Route::get('/content-items', [ContentItemController::class, 'indexForUser']);
+    Route::post('/content-items', [ContentItemController::class, 'storeForUser']);
+    Route::put('/content-items/{id}/edit', [ContentItemController::class, 'updateForUser']);
+
+
     Route::get('/content-items/{slug}', [ContentItemController::class, 'show']);
-    Route::put('/content-items/{id}/edit', [ContentItemController::class, 'update']);
     Route::delete('/content-items/{id}', [ContentItemController::class, 'destroy']);
 
     Route::get('/content-statuses', [ContentStatusController::class, 'indexForUser']);
@@ -36,6 +38,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
     Route::prefix('admin')->middleware(['is_admin'])->group(function () {
+
+
+        //TODO COMPLETAR RUTAS CONTENT-ITESM 21 DE SEPT 2025
+        Route::get('/content-items', [ContentItemController::class, 'index']);
+        Route::get('/content-items/{slug}', [ContentItemController::class, 'show']);
+        Route::post('/content-items', [ContentItemController::class, 'store']);
+        Route::put('/content-items/{id}/edit', [ContentItemController::class, 'update']);
+
+
 
         //** types 😠
         Route::get('/content-types', [ContentTypeController::class, 'index']);
