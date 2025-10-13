@@ -17,13 +17,14 @@ class TryHttpCatch
         try {
             return $callback();
         } catch (HttpResponseException $e) {
+
             return $e->getResponse();
         } catch (ModelNotFoundException $e) {
             return ApiResponseClass::sendError('Recurso no encontrado', [], 404);
         } catch (AuthenticationException $e) {
             return ApiResponseClass::sendError($e->getMessage(), [], 401);
         } catch (\Exception $e) {
-            dd($e);
+
             return self::handleExceptionByCode($e, $message);
         }
     }

@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\SessionController;
 use App\Http\Controllers\ContentItemController;
 use App\Http\Controllers\ContentStatusController;
@@ -14,6 +16,10 @@ use Illuminate\Support\Facades\Route;
 Route::post('/auth/sign-in', [SessionController::class, 'store'])->name('login');
 Route::post('/auth/sign-up', RegisterController::class);
 
+Route::post('/forgot-password', ForgotPasswordController::class);
+
+Route::post('/reset-password', ResetPasswordController::class);
+
 Route::middleware(['auth:sanctum'])->group(function () {
 
     //* ruta privada autenticada para cerrar sesion
@@ -24,9 +30,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/content-items', [ContentItemController::class, 'storeForUser']);
     Route::put('/content-items/{id}/edit', [ContentItemController::class, 'updateForUser']);
 
-
+    //*TODO PENDIENTE , ORGANIZAR EL SHOW
     Route::get('/content-items/{slug}', [ContentItemController::class, 'show']);
-    Route::delete('/content-items/{id}', [ContentItemController::class, 'destroy']);
+    Route::delete('/content-items/{id}', [ContentItemController::class, 'destroyForUser']);
 
     Route::get('/content-statuses', [ContentStatusController::class, 'indexForUser']);
     Route::get('/content-types', [ContentTypeController::class, 'indexForUser']);
@@ -45,6 +51,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/content-items/{slug}', [ContentItemController::class, 'show']);
         Route::post('/content-items', [ContentItemController::class, 'store']);
         Route::put('/content-items/{id}/edit', [ContentItemController::class, 'update']);
+        Route::delete('/content-items/{id}', [ContentItemController::class, 'destroy']);
 
 
 
