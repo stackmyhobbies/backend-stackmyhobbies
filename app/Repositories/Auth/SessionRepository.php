@@ -11,6 +11,7 @@ class SessionRepository implements SessionRepositoryInterface
 
     public function findByEmailOrUsername(string $login): User|null
     {
+
         return User::where('status', $this->active)->where('email', $login)
             ->orWhere('username', $login)
             ->first();

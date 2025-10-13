@@ -9,22 +9,31 @@ use App\Http\Controllers\ContentStatusController;
 use App\Http\Controllers\ContentTypeController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
+use App\Http\Requests\Auth\EmailVerificationController;
 use Illuminate\Support\Facades\Route;
 
 
 //*rutas publicas
+
+
 Route::post('/auth/sign-in', [SessionController::class, 'store'])->name('login');
 Route::post('/auth/sign-up', RegisterController::class);
 
 Route::post('/forgot-password', ForgotPasswordController::class);
-
 Route::post('/reset-password', ResetPasswordController::class);
 
+Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+    ->middleware(['signed'])
+    ->name('verification.verify');
+
+
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/email/verify/send', [EmailVerificationController::class, 'sendVerificationEmail'])
+        ->name('verification.send');
+
 
     //* ruta privada autenticada para cerrar sesion
     Route::post('/auth/sign-out', [SessionController::class, 'destroy']);
-
     //* ruta privada autenticada para gestionar el item
     Route::get('/content-items', [ContentItemController::class, 'indexForUser']);
     Route::post('/content-items', [ContentItemController::class, 'storeForUser']);
