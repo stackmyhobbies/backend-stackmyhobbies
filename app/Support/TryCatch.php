@@ -25,6 +25,8 @@ class TryCatch
 
             return $result;
         } catch (\Exception $e) {
+
+
             if ($transactional) {
                 DB::rollBack();
             }

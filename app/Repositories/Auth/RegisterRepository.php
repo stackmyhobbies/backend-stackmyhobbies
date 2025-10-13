@@ -9,6 +9,7 @@ class RegisterRepository implements RegisterRepositoryInterface
 {
     public function store($data): User
     {
+
         return User::create($data);
     }
 }

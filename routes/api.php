@@ -1,32 +1,47 @@
 <?php
 
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\SessionController;
 use App\Http\Controllers\ContentItemController;
 use App\Http\Controllers\ContentStatusController;
 use App\Http\Controllers\ContentTypeController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
+use App\Http\Requests\Auth\EmailVerificationController;
 use Illuminate\Support\Facades\Route;
 
 
 //*rutas publicas
+
+
 Route::post('/auth/sign-in', [SessionController::class, 'store'])->name('login');
 Route::post('/auth/sign-up', RegisterController::class);
 
+Route::post('/forgot-password', ForgotPasswordController::class);
+Route::post('/reset-password', ResetPasswordController::class);
+
+Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+    ->middleware(['signed'])
+    ->name('verification.verify');
+
+
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/email/verify/send', [EmailVerificationController::class, 'sendVerificationEmail'])
+        ->name('verification.send');
+
 
     //* ruta privada autenticada para cerrar sesion
     Route::post('/auth/sign-out', [SessionController::class, 'destroy']);
-
     //* ruta privada autenticada para gestionar el item
     Route::get('/content-items', [ContentItemController::class, 'indexForUser']);
     Route::post('/content-items', [ContentItemController::class, 'storeForUser']);
     Route::put('/content-items/{id}/edit', [ContentItemController::class, 'updateForUser']);
 
-
+    //*TODO PENDIENTE , ORGANIZAR EL SHOW
     Route::get('/content-items/{slug}', [ContentItemController::class, 'show']);
-    Route::delete('/content-items/{id}', [ContentItemController::class, 'destroy']);
+    Route::delete('/content-items/{id}', [ContentItemController::class, 'destroyForUser']);
 
     Route::get('/content-statuses', [ContentStatusController::class, 'indexForUser']);
     Route::get('/content-types', [ContentTypeController::class, 'indexForUser']);
@@ -45,6 +60,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/content-items/{slug}', [ContentItemController::class, 'show']);
         Route::post('/content-items', [ContentItemController::class, 'store']);
         Route::put('/content-items/{id}/edit', [ContentItemController::class, 'update']);
+        Route::delete('/content-items/{id}', [ContentItemController::class, 'destroy']);
 
 
 

@@ -13,10 +13,18 @@ class RegisterService
     public function store(array $data): User
     {
 
-        return TryCatch::handle(
-            function () use ($data) {
-                return $this->registerRepository->store($data);
+        return TryCatch::handle(function () use ($data) {
+
+
+            // Crear el usuario
+            $user = $this->registerRepository->store($data);
+
+            // Enviar el correo de verificación
+            if ($user) {
+                $user->sendEmailVerificationNotification();
             }
-        );
+
+            return $user;
+        });
     }
 }
