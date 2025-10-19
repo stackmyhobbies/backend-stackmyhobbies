@@ -49,4 +49,27 @@ class SessionController extends Controller
 
         return ApiResponseClass::sendResponse(null, 'Sesion cerrada correctamente');
     }
+
+    public function check(Request $request)
+    {
+        return TryHttpCatch::handle(function () use ($request) {
+            $user = $request->user();
+
+            if (! $user) {
+                return ApiResponseClass::sendError(
+                    'Token inválido o expirado',
+                    [],
+                    Response::HTTP_UNAUTHORIZED
+                );
+            }
+
+            return ApiResponseClass::sendResponse(
+                result: [
+                    'user' => new SessionResource($user),
+                ],
+                message: 'Sesión activa',
+                code: Response::HTTP_OK
+            );
+        });
+    }
 }

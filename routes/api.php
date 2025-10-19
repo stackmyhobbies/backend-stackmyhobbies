@@ -28,12 +28,15 @@ Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 've
 
 
 Route::middleware(['auth:sanctum'])->group(function () {
+
+
     Route::post('/email/verify/send', [EmailVerificationController::class, 'sendVerificationEmail'])
         ->name('verification.send');
 
 
     //* ruta privada autenticada para cerrar sesion
     Route::post('/auth/sign-out', [SessionController::class, 'destroy']);
+    Route::get('/auth/check-session', [SessionController::class, 'check']);
     //* ruta privada autenticada para gestionar el item
     Route::get('/content-items', [ContentItemController::class, 'indexForUser']);
     Route::post('/content-items', [ContentItemController::class, 'storeForUser']);
