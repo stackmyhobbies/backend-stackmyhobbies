@@ -23,11 +23,13 @@ class ResetPasswordController extends Controller
 
             $this->resetPasswordService->reset($validated);
 
+
+
             return ApiResponseClass::sendResponse(
                 null,
                 'Contraseña restablecida correctamente',
                 Response::HTTP_OK
             );
-        });
+        }, 'Error al restablecer la contraseña');
     }
 }

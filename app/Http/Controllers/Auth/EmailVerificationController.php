@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendEmailVerificationJob;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
@@ -22,11 +23,38 @@ class EmailVerificationController extends Controller
             ]);
         }
 
-        $request->user()->sendEmailVerificationNotification();
+        SendEmailVerificationJob::dispatch($request->user());
 
         return response()->json([
             'success' => true,
             'message' => 'Correo de verificación enviado correctamente.'
+        ]);
+    }
+
+    /**
+     * Reenviar enlace de verificación (requiere token específico)
+     */
+    public function resendVerificationEmail(Request $request)
+    {
+        if (!$request->user()->tokenCan('email:verify:send')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Token no autorizado para esta acción.'
+            ], 403);
+        }
+
+        if ($request->user()->hasVerifiedEmail()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'El correo ya está verificado.'
+            ]);
+        }
+
+        SendEmailVerificationJob::dispatch($request->user());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Correo de verificación reenviado correctamente.'
         ]);
     }
 
@@ -49,6 +77,6 @@ class EmailVerificationController extends Controller
             event(new Verified($user));
         }
 
-        return redirect(config('app.frontend_url') . '/email-verified'); // Ejemplo de redirección al frontend
+        return redirect(config('app.frontend_url') . 'auth/email-verified'); // Ejemplo de redirección al frontend
     }
 }

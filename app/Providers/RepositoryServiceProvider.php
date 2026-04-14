@@ -5,14 +5,14 @@ namespace App\Providers;
 use App\Interfaces\Auth\RegisterRepositoryInterface;
 use App\Interfaces\Auth\SessionRepositoryInterface;
 use App\Interfaces\ContentItemRepositoryInterface;
-use App\Interfaces\ContentStatusRepositoryInterface;
+use App\Interfaces\ProgressStatusRepositoryInterface;
 use App\Interfaces\ContentTypeRepositoryInterface;
 use App\Interfaces\TagRepositoryInterface;
 use App\Interfaces\UserRepositoryInterface;
 use App\Repositories\Auth\RegisterRepository;
 use App\Repositories\Auth\SessionRepository;
 use App\Repositories\ContentItemRepository;
-use App\Repositories\ContentStatusRepository;
+use App\Repositories\ProgressStatusRepository;
 use App\Repositories\ContentTypeRepository;
 use App\Repositories\TagRepository;
 use App\Repositories\UserRepository;
@@ -27,7 +27,7 @@ class RepositoryServiceProvider extends ServiceProvider
     {
         //
         $this->app->bind(ContentItemRepositoryInterface::class, ContentItemRepository::class);
-        $this->app->bind(ContentStatusRepositoryInterface::class, ContentStatusRepository::class);
+        $this->app->bind(ProgressStatusRepositoryInterface::class, ProgressStatusRepository::class);
         $this->app->bind(ContentTypeRepositoryInterface::class, ContentTypeRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(TagRepositoryInterface::class, TagRepository::class);

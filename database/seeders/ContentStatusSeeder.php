@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\ContentStatus;
+use App\Models\ProgressStatus;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -24,7 +24,7 @@ class ContentStatusSeeder extends Seeder
         ];
 
         foreach ($statuses as $name) {
-            ContentStatus::updateOrCreate(['name' => $name], [
+            ProgressStatus::updateOrCreate(['name' => $name], [
                 'status' => true,
             ]);
         }

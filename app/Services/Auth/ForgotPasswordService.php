@@ -2,23 +2,12 @@
 
 namespace App\Services\Auth;
 
-use Illuminate\Support\Facades\Password;
-use Illuminate\Validation\ValidationException;
-
-
-
+use App\Jobs\SendPasswordResetLinkJob;
 
 class ForgotPasswordService
 {
-
     public function sendResetLink(string $email): void
     {
-        $status = Password::sendResetLink(['email' => $email]);
-
-        if ($status != Password::RESET_LINK_SENT) {
-            throw ValidationException::withMessages([
-                'email' => [__($status)],
-            ]);
-        }
+        SendPasswordResetLinkJob::dispatch($email);
     }
 }

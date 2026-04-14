@@ -3,6 +3,7 @@
 namespace App\Services\Auth;
 
 use App\Interfaces\Auth\RegisterRepositoryInterface;
+use App\Jobs\SendEmailVerificationJob;
 use App\Models\User;
 use App\Support\TryCatch;
 
@@ -19,9 +20,8 @@ class RegisterService
             // Crear el usuario
             $user = $this->registerRepository->store($data);
 
-            // Enviar el correo de verificación
             if ($user) {
-                $user->sendEmailVerificationNotification();
+                SendEmailVerificationJob::dispatch($user);
             }
 
             return $user;

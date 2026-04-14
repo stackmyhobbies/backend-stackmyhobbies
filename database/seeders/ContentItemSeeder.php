@@ -2,179 +2,208 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ProgressUnit;
 use App\Models\ContentItem;
+use App\Models\ContentType;
+use App\Models\ProgressStatus;
+use App\Models\Tag;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 use App\Enums\SegmentType;
+use App\Enums\SubSegmentType;
+use Illuminate\Support\Str;
 
 class ContentItemSeeder extends Seeder
 {
     public function run(): void
     {
+        // 1. Cargamos los tipos de contenido (mapeo por nombre para evitar IDs mágicos)
+        $anime = ContentType::where('name', 'anime')->firstOrFail();
+        $manga = ContentType::where('name', 'manga')->firstOrFail();
+        $movie = ContentType::where('name', 'película')->firstOrFail();
+
+        // 2. Cargamos los estados (mapeo por nombre para evitar IDs mágicos)
+        $status = ProgressStatus::pluck('id', 'name'); // Esto crea un array tipo: ['Viendo' => 3, 'Finalizado' => 2...]
+
+        // 3. Cargamos los tags (mapeo por nombre)
+        $tags = Tag::pluck('id', 'name');
+
         $items = [
             [
                 'title' => 'One Piece',
                 'description' => 'Aventura pirata de larga duración.',
-                'type_id' => 1,
-                'status_id' => 2,
+                'content_type_id' => $anime->id,
+                'progress_status_id' => $status['Viendo'],
                 'image_url' => 'http://example.com/onepiece.jpg',
                 'start_date' => '2023-02-01 00:00:00',
                 'end_date' => null,
                 'current_progress' => 1075,
                 'total_progress' => 1100,
-                'progress_unit' => 'episodios',
+                'progress_unit' => ProgressUnit::EPISODES->value,
                 'rating' => 10,
                 'notes' => 'Aún en emisión.',
-                'status' => true,
-                'tags' => [3, 6, 9],
-                'segment_type' => 'season',
+                'is_active' => true,
+                'tag_names' => ['shonen', 'aventura', 'acción'],
+                'segment_type' => SegmentType::SEASON->value,
                 'segment_number' => 20,
             ],
             [
                 'title' => 'Death Note',
                 'description' => 'El poder de un cuaderno mortal.',
-                'type_id' => 1,
-                'status_id' => 3,
+                'content_type_id' => $anime->id,
+                'progress_status_id' => $status['Finalizado'],
                 'image_url' => 'http://example.com/deathnote.jpg',
                 'start_date' => '2022-05-01 00:00:00',
                 'end_date' => '2022-06-01 00:00:00',
                 'current_progress' => 37,
                 'total_progress' => 37,
-                'progress_unit' => 'episodios',
+                'progress_unit' => ProgressUnit::EPISODES->value,
                 'rating' => 9,
                 'notes' => 'Obra maestra psicológica.',
-                'status' => true,
-                'tags' => [2, 4, 6],
-                'segment_type' => 'season',
+                'is_active' => true,
+                'tag_names' => ['psicológico', 'suspenso', 'acción'],
+                'segment_type' => SegmentType::SEASON->value,
                 'segment_number' => 1,
             ],
             [
                 'title' => 'Berserk',
                 'description' => 'Oscuridad, sangre y espadas.',
-                'type_id' => 2,
-                'status_id' => 4,
+                'content_type_id' => $manga->id,
+                'progress_status_id' => $status['Pausado'],
                 'image_url' => 'http://example.com/berserk.jpg',
                 'start_date' => '2021-01-01 00:00:00',
                 'end_date' => null,
                 'current_progress' => 50,
                 'total_progress' => 364,
-                'progress_unit' => 'paginas',
+                'progress_unit' => ProgressUnit::PAGES->value,
                 'rating' => 8,
                 'notes' => 'Crudo y profundo.',
-                'status' => true,
-                'tags' => [1, 5, 10],
-                'segment_type' => 'volume',
+                'is_active' => true,
+                'tag_names' => ['terror', 'acción', 'drama'],
+                'segment_type' => SegmentType::VOLUME->value,
                 'segment_number' => 8,
+                'segment_subtype' => SubSegmentType::CHAPTER->value,
+                'segment_subnumber' => 5
             ],
             [
                 'title' => 'Jujutsu Kaisen',
                 'description' => 'Exorcistas luchando contra maldiciones.',
-                'type_id' => 1,
-                'status_id' => 1,
+                'content_type_id' => $anime->id,
+                'progress_status_id' => $status['En emisión'],
                 'image_url' => 'http://example.com/jujutsu.jpg',
                 'start_date' => '2023-07-01 00:00:00',
                 'end_date' => null,
                 'current_progress' => 12,
                 'total_progress' => 24,
-                'progress_unit' => 'episodios',
+                'progress_unit' => ProgressUnit::EPISODES->value,
                 'rating' => 8,
                 'notes' => '',
-                'status' => true,
-                'tags' => [3, 7, 11],
-                'segment_type' => 'season',
+                'is_active' => true,
+                'tag_names' => ['shonen', 'acción', 'sobrenatural'],
+                'segment_type' => SegmentType::SEASON->value,
                 'segment_number' => 2,
             ],
             [
                 'title' => 'Spirited Away',
                 'description' => 'Una niña entra a un mundo mágico.',
-                'type_id' => 5,
-                'status_id' => 7,
+                'content_type_id' => $movie->id,
+                'progress_status_id' => $status['Finalizado'],
                 'image_url' => 'http://example.com/spirited.jpg',
                 'start_date' => '2022-10-10 00:00:00',
                 'end_date' => '2022-10-10 00:00:00',
                 'current_progress' => 120,
                 'total_progress' => 120,
-                'progress_unit' => 'minutos',
+                'progress_unit' => ProgressUnit::MINUTES->value,
                 'rating' => 10,
                 'notes' => 'Hermosa y emotiva.',
-                'status' => true,
-                'tags' => [4, 8, 12],
-                'segment_type' => 'movie',
+                'is_active' => true,
+                'tag_names' => ['fantasia', 'aventura', 'drama'],
+                'segment_type' => SegmentType::MOVIE->value,
                 'segment_number' => 1,
             ],
             [
                 'title' => 'Tokyo Ghoul',
                 'description' => 'Híbridos humanos y ghouls.',
-                'type_id' => 1,
-                'status_id' => 5,
+                'content_type_id' => $anime->id,
+                'progress_status_id' => $status['Abandonado'],
                 'image_url' => 'http://example.com/tokyoghoul.jpg',
                 'start_date' => '2021-03-01 00:00:00',
                 'end_date' => '2021-06-01 00:00:00',
                 'current_progress' => 12,
                 'total_progress' => 24,
-                'progress_unit' => 'episodios',
+                'progress_unit' => ProgressUnit::EPISODES->value,
                 'rating' => 7,
                 'notes' => 'Oscuro e intrigante.',
-                'status' => true,
-                'tags' => [2, 4, 10],
-                'segment_type' => 'season',
+                'is_active' => true,
+                'tag_names' => ['terror', 'suspenso', 'acción'],
+                'segment_type' => SegmentType::SEASON->value,
                 'segment_number' => 1,
             ],
             [
                 'title' => 'Mob Psycho 100',
                 'description' => 'Poder psíquico y adolescencia.',
-                'type_id' => 1,
-                'status_id' => 2,
+                'content_type_id' => $anime->id,
+                'progress_status_id' => $status['Viendo'],
                 'image_url' => 'http://example.com/mob.jpg',
                 'start_date' => '2022-09-01 00:00:00',
                 'end_date' => null,
                 'current_progress' => 8,
                 'total_progress' => 12,
-                'progress_unit' => 'episodios',
+                'progress_unit' =>  ProgressUnit::EPISODES->value,
                 'rating' => 8,
                 'notes' => 'Sorprendente animación.',
-                'status' => true,
-                'tags' => [1, 3, 5],
-                'segment_type' => 'season',
+                'is_active' => true,
+                'tag_names' => ['acción', 'comedia', 'sobrenatural'],
+                'segment_type' => SegmentType::SEASON->value,
                 'segment_number' => 3,
             ],
             [
                 'title' => 'Vinland Saga',
                 'description' => 'Vikingos, guerra y redención.',
-                'type_id' => 2,
-                'status_id' => 3,
+                'content_type_id' => $anime->id,
+                'progress_status_id' => $status['Finalizado'],
                 'image_url' => 'http://example.com/vinland.jpg',
                 'start_date' => '2023-01-01 00:00:00',
                 'end_date' => '2023-06-01 00:00:00',
                 'current_progress' => 24,
                 'total_progress' => 24,
-                'progress_unit' => 'episodios',
+                'progress_unit' =>  ProgressUnit::EPISODES->value,
                 'rating' => 9,
                 'notes' => 'Historia madura y realista.',
-                'status' => true,
-                'tags' => [6, 9, 12],
-                'segment_type' => 'season',
+                'is_active' => true,
+                'tag_names' => ['aventura', 'drama', 'acción'],
+                'segment_type' => SegmentType::SEASON->value,
                 'segment_number' => 2,
             ],
         ];
 
         foreach ($items as $item) {
-            $tags = $item['tags'];
-            unset($item['tags']);
+            $tagNames = $item['tag_names'];
+            unset($item['tag_names']);
 
             $item['user_id'] = 1;
 
-            // Crear el segment_label dinámicamente
+            // Generar el slug manualmente
+            $slug = Str::slug($item['title'] . ' ' . $item['segment_type'] . ' ' . $item['segment_number']);
+            $item['slug'] = $slug;
 
-            $item['segment_type'] = SegmentType::tryFrom($item['segment_type'])->value;
+            // Usar updateOrCreate para evitar duplicados
+            $content = ContentItem::updateOrCreate(
+                [
+                    'user_id' => $item['user_id'],
+                    'title' => $item['title'],
+                    'segment_type' => $item['segment_type'],
+                    'segment_number' => $item['segment_number'],
+                ],
+                $item
+            );
 
-            $content = new ContentItem();
-            $content->fill($item);
-            $content->segment_type = $item['segment_type'];
-            // asegúrate que sea enum
-            $content->save();
-
-            $content->tags()->sync($tags);
+            // Asociar los tags por nombre
+            $tagIds = [];
+            foreach ($tagNames as $tagName) {
+                $tag = Tag::where('name', $tagName)->firstOrFail();
+                $tagIds[] = $tag->id;
+            }
+            $content->tags()->sync($tagIds);
         }
     }
 }

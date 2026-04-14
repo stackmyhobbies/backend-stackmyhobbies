@@ -7,6 +7,7 @@ use App\Interfaces\Auth\SessionRepositoryInterface;
 use App\Models\User;
 use App\Support\TryCatch;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
 use Illuminate\Support\Facades\Hash;
@@ -17,7 +18,7 @@ class SessionService
 
     public function __construct(protected SessionRepositoryInterface $sessionRepository) {}
 
-    public function store(array $credentials): array
+    public function store(array $credentials): mixed
     {
 
         return TryCatch::handle(
@@ -31,16 +32,23 @@ class SessionService
 
                 // 🚫 Verificar si el correo está confirmado
                 if (! $user->hasVerifiedEmail()) {
-                    return ApiResponseClass::sendResponse(
-                        result: null,
-                        message: 'Debes verificar tu correo antes de iniciar sesión.',
-                        code: Response::HTTP_FORBIDDEN
-                    );
+                    return [
+                        'success' => false,
+                        'message' => 'Debes verificar tu correo antes de iniciar sesión.',
+                        'email_verified' => false,
+                        'user' => $user,
+                        'token' => $user->createToken(
+                            'email-verify-resend',
+                            ['email:verify:send'], // <- ability autorizada
+                            now()->addMinutes(15)
+                        )->plainTextToken
+                    ];
                 }
 
                 $token = $user->createToken('API Token')->plainTextToken;
 
                 return [
+                    'success' => true,
                     'user' => $user,
                     'token' => $token,
                 ];

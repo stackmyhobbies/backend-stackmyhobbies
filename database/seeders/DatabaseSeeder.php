@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Date;
 
 class DatabaseSeeder extends Seeder
 {
@@ -25,7 +26,8 @@ class DatabaseSeeder extends Seeder
             "last_name" => "Salgado Echeverria",
             "username" => "jorge019s",
             "email" => "jasen019@gmail.com",
-            "password" => "123456"
+            "password" => "123456",
+            "email_verified_at" => Date::now()
         ]);
         $this->call([
             TagSeeder::class,

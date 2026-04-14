@@ -25,7 +25,12 @@ class TagSeeder extends Seeder
             'Comedia',
             'Romance',
             'Fantasia',
-            'Ciencia ficción'
+            'Ciencia ficción',
+            'Drama',
+            'Sobrenatural',
+            'Misterio',
+            'Psicológico',
+            'Suspenso'
         ];
 
         foreach ($tags as $name) {

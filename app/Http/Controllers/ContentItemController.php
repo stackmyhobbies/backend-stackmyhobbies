@@ -32,22 +32,30 @@ class ContentItemController extends Controller
     }
 
 
+
+    //* DONE
     public function indexForUser(Request $request)
     {
         $perPage = $request->input('per_page');
-
         $user_id = Auth::id();
+        $filters = $request->only([
+            'search',
+            'content_type_id',
+            'progress_status_id',
+            'tags' // Array de IDs de tags que viene del frontend
+        ]);
 
         return TryHttpCatch::handle(
-            function () use ($user_id, $perPage) {
-                $content_items = $this->contentItemService->indexForUser($user_id, [], $perPage);
+            function () use ($user_id, $perPage, $filters) {
+                $content_items = $this->contentItemService->indexForUser($user_id, $filters, $perPage);
+
 
                 $result = $perPage > 0 ? [
-                    [
-                        'items' => ContentItemResource::collection($content_items),
-                        'meta_data' => PaginationHelper::meta($content_items),
-                    ]
+                    'items' => ContentItemResource::collection($content_items),
+                    'meta_data' => PaginationHelper::meta($content_items),
                 ] : ContentItemResource::collection($content_items);
+
+
 
                 return ApiResponseClass::sendResponse(
                     result: $result,
@@ -59,41 +67,34 @@ class ContentItemController extends Controller
     }
 
 
+    //* DONE
     public function index(Request $request)
     {
+        $perPage = $request->input('per_page', 15);
 
-        // ?Para indicarle como debe venir
-        // ?with=tags,contentType,contentStatus
-        // $with = array_filter(explode(',', $request->query('with', '')));
-
-        $perPage = $request->input('per_page');
-
+        // Agregamos tag_id a los permitidos
+        $filters = $request->only([
+            'search',
+            'user_id',
+            'content_type_id',
+            'is_active',
+            'progress_status_id',
+            'tags'
+        ]);
 
         return TryHttpCatch::handle(
-            function () use ($perPage) {
-                $content_items = $this->contentItemService->index([], $perPage);
+            function () use ($perPage, $filters) {
+                $content_items = $this->contentItemService->index($filters, $perPage);
+
+                // Si es paginado, devolvemos meta_data, si no, solo la colección
+                $resource = ContentItemResource::collection($content_items);
 
                 $result = $perPage > 0 ? [
-                    [
-                        'items' => ContentItemResource::collection($content_items),
-                        'meta_data' => PaginationHelper::meta($content_items),
-                    ]
-                ] : ContentItemResource::collection($content_items);
+                    'items' => $resource,
+                    'meta_data' => PaginationHelper::meta($content_items),
+                ] : $resource;
 
-                // return ApiResponseClass::sendResponse(
-                //     [
-                //         "items" => ContentItemResource::collection($content_items),
-                //         "meta_data" => PaginationHelper::meta($content_items)
-                //     ],
-                //     'items loaded successfully',
-                //     Response::HTTP_OK
-                // );
-
-                return ApiResponseClass::sendResponse(
-                    result: $result,
-                    message: 'items loaded successfully',
-                    code: Response::HTTP_OK
-                );
+                return ApiResponseClass::sendResponse($result, 'Admin items loaded successfully');
             }
         );
     }
@@ -102,8 +103,9 @@ class ContentItemController extends Controller
     {
 
         $user_admin_id = Auth::id();
-
         $validated = $request->validated();
+        $image = $request->file('image');
+
         return TryHttpCatch::handle(
             function () use ($user_admin_id, $validated) {
                 $contentItem = $this->contentItemService->store($user_admin_id, $validated);
@@ -116,14 +118,24 @@ class ContentItemController extends Controller
     {
         $user_id = Auth::id();
         $validated = $request->validated();
+
+        // IMPORTANTE: Obtenemos el archivo directamente
+        $image = $request->file('image');
+
         return TryHttpCatch::handle(
-            function () use ($user_id, $validated) {
-                $contentItem = $this->contentItemService->storeForUser($user_id, $validated);
-                return ApiResponseClass::sendResponse(new ContentItemResource($contentItem), 'items creada exitosamnete', Response::HTTP_CREATED);
+            // Debes pasar $image en el 'use' para que el Servicio la reciba
+            function () use ($user_id, $validated, $image) {
+                // Pasamos la imagen como tercer argumento
+                $contentItem = $this->contentItemService->storeForUser($user_id, $validated, $image);
+
+                return ApiResponseClass::sendResponse(
+                    new ContentItemResource($contentItem),
+                    'Item creado exitosamente',
+                    Response::HTTP_CREATED
+                );
             }
         );
     }
-
     /**
      * Display the specified resource.
      */
@@ -219,3 +231,35 @@ class ContentItemController extends Controller
         );
     }
 }
+
+
+// use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+
+// public function store(Request $request)
+// {
+//     $request->validate([
+//         'title' => 'required|string|max:255',
+//         'image' => 'nullable|image|max:2048', // Validación de seguridad
+//         // ... otras validaciones
+//     ]);
+
+//     $imagePath = null;
+
+//     if ($request->hasFile('image')) {
+//         // Subimos a Cloudinary en una carpeta específica para tu proyecto StackMyHobbies
+//         $upload = $request->file('image')->storeOnCloudinary('stack_my_hobbies');
+
+//         // Guardamos el Public ID (ejemplo: stack_my_hobbies/manga_xyz)
+//         $imagePath = $upload->getPublicId();
+//     }
+
+//     ContentItem::create([
+//         'title' => $request->title,
+//         'slug' => Str:>:slug($request->title),
+//         'image_path' => $imagePath,
+//         'user_id' => auth()->id(),
+//         // ... demás campos
+//     ]);
+
+//     return redirect()-route('content.index')->with('success', 'Item creado correctamente');
+// }

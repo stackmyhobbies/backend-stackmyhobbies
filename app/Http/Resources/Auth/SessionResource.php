@@ -21,6 +21,7 @@ class SessionResource extends JsonResource
             'username'   => $this->username,
             'email'      => $this->email,
             'is_admin'   => $this->is_admin,
+            'email_verified_at' => $this->email_verified_at
         ];
     }
 }

@@ -10,10 +10,23 @@ enum SegmentType: string
     case PART = 'part';
     case EDITION = 'edition';
     case MOVIE = 'movie';
+    case SINGLE = 'single';
 
     public static function values(): array
     {
         return array_column(self::cases(), 'value');
+    }
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::SEASON  => 'Temporada',
+            self::VOLUME  => 'Volumen',
+            self::PART    => 'Parte',
+            self::EDITION => 'Edición',
+            self::MOVIE   => 'Película',
+            self::SINGLE  => 'Single'
+        };
     }
 
     public static function labels(): array
@@ -23,6 +36,8 @@ enum SegmentType: string
             self::VOLUME->value => 'Volumen',
             self::PART->value => 'Parte',
             self::EDITION->value => 'Edición',
+            self::MOVIE->value => 'Película',
+            self::SINGLE  => 'Single'
         ];
     }
 }

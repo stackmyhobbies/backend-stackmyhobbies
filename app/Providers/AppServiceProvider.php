@@ -24,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         ResetPassword::createUrlUsing(function ($user, string $token) {
-            return config('app.frontend_url') . "/reset-password?token={$token}&email={$user->email}";
+            return config('app.frontend_url') . "auth/reset-password?token={$token}&email={$user->email}";
         });
 
         VerifyEmail::createUrlUsing(function ($notifiable) {
@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
                 ['id' => $notifiable->getKey(), 'hash' => sha1($notifiable->getEmailForVerification())]
             );
 
-            return config('app.frontend_url') . '/verify-email?url=' . urlencode($temporarySignedUrl);
+            return config('app.frontend_url') . 'auth/verify-email?url=' . urlencode($temporarySignedUrl);
         });
     }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\ContentType\ContentTypeLiteResource;
-use App\Http\Resources\ContentStatus\ContentStatusLiteResource;
+use App\Http\Resources\ProgressStatus\ProgressStatusLiteResource;
 
 
 
@@ -20,15 +20,18 @@ class ContentItemResource extends JsonResource
             'user_id' => $this->user_id,
             'title' => $this->title,
             'slug' => $this->slug,
-            'description' => $this->description,
-            'type_id' => $this->type_id,
+            'description' => $this->when($request->routeIs('content-items.show'), $this->description),
+            'content_type_id' => $this->content_type_id,
 
-            'status_id' => $this->status_id,
+            'progress_status_id' => $this->progress_status_id,
             'segment_type' => $this->segment_type,
             'segment_number' => $this->segment_number,
             'segment_label' => $this->segment_label,
+            'segment_subtype' => $this->segment_subtype,
+            'segment_subnumber' => $this->segment_subnumber,
 
-            'image_url' => $this->image_url,
+            'thumbnail_url' => $this->thumbnail_url,
+            'detail_url' => $this->when($request->routeIs('content-items.show'), $this->detail_url),
             'start_date' => $this->start_date?->toDateTimeString(),
             'end_date' => $this->end_date?->toDateTimeString(),
             'current_progress' => $this->current_progress,
@@ -37,7 +40,7 @@ class ContentItemResource extends JsonResource
             'progress_unit' => $this->progress_unit->value ?? null,
             'notes' => $this->notes,
             'rating' => $this->rating,
-            'status' => $this->status,
+            'is_active' => $this->is_active,
 
             'tags' => $this->whenLoaded(
                 'tags',
@@ -49,7 +52,7 @@ class ContentItemResource extends JsonResource
             ),
 
             'type' => new ContentTypeLiteResource($this->whenLoaded('contentType')),
-            'status_detail' => new ContentStatusLiteResource($this->whenLoaded('contentStatus')),
+            'progress_status' => new ProgressStatusLiteResource($this->whenLoaded('progressStatus')),
         ];
     }
 }
