@@ -16,22 +16,22 @@ class UserService
     /**
      * Create a new class instance.
      */
-    protected UserRepositoryInterface $_userRepository;
-    public function __construct(UserRepositoryInterface $userRepository)
+
+    public function __construct(protected UserRepositoryInterface $userRepository)
     {
         //
-        $this->_userRepository = $userRepository;
+
     }
 
     public function index()
     {
-        $users = $this->_userRepository->index();
+        $users = $this->userRepository->index();
         return $users;
     }
 
     public function show($id)
     {
-        $user = $this->_userRepository->show($id);
+        $user = $this->userRepository->show($id);
         return $user;
     }
 
@@ -39,7 +39,7 @@ class UserService
     {
 
         return TryCatch::handle(function () use ($data) {
-            $user = $this->_userRepository->store($data);
+            $user = $this->userRepository->store($data);
             return $user;
         });
     }
@@ -48,7 +48,7 @@ class UserService
     {
 
         return TryCatch::handle(function () use ($data, $id) {
-            $user =  $this->_userRepository->update($data, $id);
+            $user =  $this->userRepository->update($data, $id);
             return $user;
         });
     }
@@ -57,7 +57,7 @@ class UserService
     {
         return TryCatch::handle(
             function () use ($id) {
-                $result = $this->_userRepository->destroy($id);
+                $result = $this->userRepository->destroy($id);
                 return $result;
             }
         );

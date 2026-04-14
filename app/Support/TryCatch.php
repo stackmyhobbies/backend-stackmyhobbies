@@ -6,6 +6,7 @@ use App\Classes\ApiResponseClass;
 use Closure;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class TryCatch
 {
@@ -24,6 +25,8 @@ class TryCatch
 
             return $result;
         } catch (\Exception $e) {
+
+
             if ($transactional) {
                 DB::rollBack();
             }

@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests\ContentType;
 
+use App\Enums\ProgressUnit;
+use App\Enums\SegmentType;
+use App\Enums\SubSegmentType;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -32,7 +35,13 @@ class UpdateContentTypeRequest extends FormRequest
                 'min:3',
                 Rule::unique('content_types', 'name')->ignore($id)
             ],
-            'status' => ['required', 'boolean']
+            'status' => ['required', 'boolean'],
+            'allowed_units' => ['required', 'array', 'min:1'],
+            'allowed_units.*' => [Rule::enum(ProgressUnit::class)],
+            'allowed_segment_types' => ['required', 'array', 'min:1'],
+            'allowed_segment_types.*' => [Rule::enum(SegmentType::class)],
+            'allowed_subsegment_types' => ['nullable', 'array'],
+            'allowed_subsegment_types.*' => [Rule::enum(SubSegmentType::class)],
         ];
     }
 
@@ -40,13 +49,15 @@ class UpdateContentTypeRequest extends FormRequest
     {
         return [
             'name' => 'nombre',
-            'status' => 'estado'
+            'status' => 'estado',
+            'allowed_units' => 'unidades permitidas',
+            'allowed_segment_types' => 'tipos de segmento permitidos',
+            'allowed_subsegment_types' => 'tipos de subsegmento permitidos',
         ];
     }
 
     public function failedValidation(Validator $validator)
     {
-
         throw new HttpResponseException(response()->json([
             'success' => false,
             'message' => 'Validation errors',

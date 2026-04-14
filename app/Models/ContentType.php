@@ -10,11 +10,17 @@ class ContentType extends Model
 
     protected $fillable = [
         "name",
-        "status"
+        "status",
+        "allowed_units",
+        "allowed_segment_types",
+        "allowed_subsegment_types"
     ];
 
     protected $casts = [
-        'status' => 'boolean'
+        'status' => 'boolean',
+        'allowed_units' => 'array',
+        'allowed_segment_types' => 'array',
+        'allowed_subsegment_types' => 'array'
     ];
     //
 
@@ -25,6 +31,6 @@ class ContentType extends Model
     // Relación: un ContentType tiene muchos ContentItems
     public function contentItems()
     {
-        return $this->hasMany(ContentItem::class, 'type_id');
+        return $this->hasMany(ContentItem::class, 'content_type_id');
     }
 }

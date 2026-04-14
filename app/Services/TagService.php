@@ -11,28 +11,53 @@ use Illuminate\Http\Response;
 class TagService
 {
 
-    protected TagRepositoryInterface $_tagRepository;
-    public function __construct(TagRepositoryInterface $tagRepository)
+
+    public function __construct(private TagRepositoryInterface $tagRepository) {}
+
+
+    public function indexForUser()
     {
-        $this->_tagRepository = $tagRepository;
+        return TryCatch::handle(
+            function () {
+                return $this->tagRepository->indexForUser();
+            }
+        );
     }
 
-    public function index()
+    public function index(?array $filters = [], ?int $perPage = null)
     {
-
-        return $this->_tagRepository->index();
+        return TryCatch::handle(
+            function () use ($filters, $perPage) {
+                return $this->tagRepository->index(null, $filters, $perPage);
+            }
+        );
     }
 
     public function show($slug)
     {
-        return $this->_tagRepository->show($slug);
+        return $this->tagRepository->show($slug);
+    }
+
+    public function showForUser($slug, $userId)
+    {
+        return  TryCatch::handle(
+            function () use ($slug, $userId) {
+                return $this->tagRepository->showForUser($slug, $userId);
+            }
+        );
+    }
+
+    public function showTagWithContentItem(string $slug, $userId, ?int $perPage = null)
+    {
+
+        return $this->tagRepository->showTagWithContentItem($slug, $userId, $perPage);
     }
 
     public function store(array $data)
     {
         return TryCatch::handle(
             function () use ($data) {
-                return $this->_tagRepository->store($data);
+                return $this->tagRepository->store($data);
             }
         );
     }
@@ -40,14 +65,14 @@ class TagService
     public function update(array $data, $id)
     {
         return TryCatch::handle(function () use ($data, $id) {
-            return $this->_tagRepository->update($data, $id);
+            return $this->tagRepository->update($data, $id);
         });
     }
 
     public function destroy($id)
     {
         return TryCatch::handle(function () use ($id) {
-            return $this->_tagRepository->destroy($id);
+            return $this->tagRepository->destroy($id);
         });
     }
 }

@@ -1,0 +1,45 @@
+
+  {
+    "user_id": "1",
+    "title": "bleach",
+    "description": "Titanes gigantes invaden el mundo.",
+    "type_id": 1,
+    "status_id": 1,
+    "segment_type": "season",
+    "segment_number": 1,
+      
+    "image_url": "http://example.com/aot.jpg",
+    "start_date": "2023-01-01 00:00:00",
+    "end_date": "2023-01-02 00:00:00",
+    "current_progress": 5,
+    "total_progress": 25,
+    "progress_unit": "episodios",
+    "rating": 9,
+    "notes": "Muy intenso.",
+    "status": true,
+    "tags": [3, 2, 1]
+  }
+
+
+
+  {
+    "user_id": "1",
+    "title": "Attack on Titan 2025",
+    "description": "Titanes gigantes invaden el mundo.",
+    "type_id": 1,
+    "status_id": 1,
+    "segment_type": "season",
+    "segment_number": 1,
+      
+    "image_url": "http://example.com/aot.jpg",
+    "start_date": "2023-01-01 00:00:00",
+    "end_date": "2023-01-02 00:00:00",
+    "current_progress": 5,
+    "total_progress": 25,
+    "progress_unit": "episodios",
+    "rating": 9,
+    "notes": "Muy intenso.",
+    "status": true,
+    "tags": [1, 2, 5]
+  }
+

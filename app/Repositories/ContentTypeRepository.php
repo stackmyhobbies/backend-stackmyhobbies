@@ -4,15 +4,39 @@ namespace App\Repositories;
 
 use App\Interfaces\ContentTypeRepositoryInterface;
 use App\Models\ContentType;
+use Illuminate\Database\Eloquent\Collection;
 
 class ContentTypeRepository implements ContentTypeRepositoryInterface
 {
 
-    public function __construct() {}
 
-    public function index()
+    private $active = true;
+
+    public function indexForUser(): Collection
     {
-        return ContentType::where(["status" => true])->get();
+        return ContentType::where("status", $this->active)->get();
+    }
+
+    public function index(?array $with = [], ?array $filters = [], ?int $perPage = null)
+    {
+
+        $query = ContentType::query();
+
+        if (!empty($with)) {
+            $query->with($with);
+        }
+
+        if (!empty($filters)) {
+            foreach ($filters as $field => $value) {
+                $query->where($field, $value);
+            }
+        }
+
+        if ($perPage) {
+            return $query->paginate($perPage);
+        }
+
+        return $query->get();
     }
 
     public function getById($id)
