@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\contentItem;
 
+use App\Enums\DayOfWeek;
 use App\Enums\ProgressUnit;
 use App\Enums\SegmentType;
 use Illuminate\Contracts\Validation\Validator;
@@ -52,7 +53,8 @@ class UpdateContentItemRequest extends FormRequest
             'notes' => ['nullable', 'string'],
             'status' => ['boolean'],
             'tags' => ['required', 'array'],
-            'tags.*' => ['integer', 'exists:tags,id']
+            'tags.*' => ['integer', 'exists:tags,id'],
+            'day_of_week' => ['nullable', Rule::in(DayOfWeek::values())]
         ];
     }
 

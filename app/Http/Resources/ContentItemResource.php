@@ -41,6 +41,7 @@ class ContentItemResource extends JsonResource
             'notes' => $this->notes,
             'rating' => $this->rating,
             'is_active' => $this->is_active,
+            'day_of_week' => $this->day_of_week?->value ?? null,
 
             'tags' => $this->whenLoaded(
                 'tags',

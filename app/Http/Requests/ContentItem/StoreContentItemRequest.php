@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\ContentItem;
 
+use App\Enums\DayOfWeek;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -48,7 +49,8 @@ class StoreContentItemRequest extends FormRequest
             'notes' => ['nullable', 'string'],
             'status' => ['boolean'],
             'tags' => ['required', 'array'],
-            'tags.*' => ['integer', 'exists:tags,id'] // Laravel asume true/false, puedes usar cast en el modelo
+            'tags.*' => ['integer', 'exists:tags,id'],
+            'day_of_week' => ['nullable', Rule::in(DayOfWeek::values())]
         ];
     }
 
