@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\contentItem;
+namespace App\Http\Requests\ContentItem;
 
 use App\Enums\DayOfWeek;
 use App\Enums\ProgressUnit;

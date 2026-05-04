@@ -93,8 +93,10 @@ class ApiExceptionRenderer
             if ($request->is('api/*')) {
                 Log::error($e);
 
+                define("MESSAGE_ERROR", $e->getMessage());
+
                 return ApiResponseClass::sendError(
-                    'Error interno del servidor',
+                    MESSAGE_ERROR ?: 'Error interno del servidor 500',
                     [],
                     500
                 );

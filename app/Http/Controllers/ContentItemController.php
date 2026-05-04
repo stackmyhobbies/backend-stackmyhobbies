@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Classes\ApiResponseClass;
 use App\Http\Requests\ContentItem\StoreContentItemRequest;
-use App\Http\Requests\contentItem\UpdateContentItemRequest;
+use App\Http\Requests\ContentItem\UpdateContentItemRequest;
 use App\Http\Resources\ContentItemResource;
 use App\Services\ContentItemService;
 use App\Support\PaginationHelper;
 use App\Support\TryHttpCatch;
-use DragonCode\Contracts\Cache\Store;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -167,6 +166,7 @@ class ContentItemController extends Controller
     public function update(UpdateContentItemRequest $request, string $id)
     {
 
+
         $this->authorize('update', $request);
         $validated = $request->validated();
 
@@ -181,6 +181,7 @@ class ContentItemController extends Controller
 
     public function updateForUser(UpdateContentItemRequest $request, string $id)
     {
+
 
         $user_id = Auth::id();
         $this->authorize('update', $request);
