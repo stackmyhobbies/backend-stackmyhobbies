@@ -2,25 +2,21 @@
 
 namespace App\Support;
 
+use App\Classes\ApiResponseClass;
+use App\Exceptions\Database\DatabaseConstraintHandler;
 use Closure;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\ValidationException;
 
-use App\Classes\ApiResponseClass;
-use App\Exceptions\Database\DatabaseConstraintHandler;
-use Illuminate\Auth\AuthenticationException;
-
 class TryHttpCatch
 {
-
-
     public static function handle(Closure $callback, string $message = 'Ha ocurrido un error inesperado. Intente más tarde.')
     {
         try {
             return $callback();
         } catch (HttpResponseException $e) {
-
             return $e->getResponse();
         } catch (ModelNotFoundException $e) {
             return ApiResponseClass::sendError('Recurso no encontrado', [], 404);
@@ -35,7 +31,6 @@ class TryHttpCatch
 
     private static function handleExceptionByCode(\Exception $e, $message)
     {
-
 
         $code = (int) $e->getCode();
 

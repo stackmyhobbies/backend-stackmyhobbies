@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Cviebrock\EloquentSluggable\Sluggable;
-
+use App\Enums\DayOfWeek;
 use App\Enums\ProgressUnit;
 use App\Enums\SegmentType;
 use App\Enums\SubSegmentType;
+use Cloudinary\Transformation\Delivery;
+use Cloudinary\Transformation\Format;
+use Cloudinary\Transformation\Quality;
+use Cloudinary\Transformation\Resize;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Model;
 
 class ContentItem extends Model
 {
@@ -29,24 +33,25 @@ class ContentItem extends Model
     protected $casts = [
         'progress_unit' => ProgressUnit::class,
         'segment_type' => SegmentType::class,
-        'subsegment_type' => SubSegmentType::class,
+        'segment_subtype' => SubSegmentType::class,
+        'day_of_week' => DayOfWeek::class,
         'status' => 'boolean',
-        'start_date' => 'datetime',
-        'end_date' => 'datetime',
+        'viewing_started_at' => 'datetime',
+        'viewing_finished_at' => 'datetime',
+        'aired_from' => 'date',
+        'aired_to' => 'date',
     ];
 
     protected $appends = [
         'thumbnail_url',
         'detail_url',
         'progress_percentage',
-        'segment_label'
+        'segment_label',
     ];
 
     // En tu modelo ContentItem.php
 
     protected $thumbnailCache = null;
-
-
 
     // Cada ContentItem pertenece a un User
     public function user()
@@ -79,6 +84,7 @@ class ContentItem extends Model
         if ($this->total_progress > 0) {
             return round(($this->current_progress / $this->total_progress) * 100, 2);
         }
+
         return null;
     }
 
@@ -99,40 +105,37 @@ class ContentItem extends Model
 
     public function getSubSegmentTypeForSlugAttribute()
     {
-        return $this->subsegment_type ? $this->subsegment_type->value : null;
+        return $this->segment_subtype ? $this->segment_subtype->value : null;
     }
 
     // App\Models\ContentItem.php
 
-
     public function getThumbnailUrlAttribute()
     {
-        if (!$this->image_path) return asset('images/default-placeholder.png');
+        if (! $this->image_path) {
+            return asset('images/default-placeholder.png');
+        }
 
         // Si ya lo calculamos en esta ejecución, lo devolvemos
-        if ($this->thumbnailCache) return $this->thumbnailCache;
+        if ($this->thumbnailCache) {
+            return $this->thumbnailCache;
+        }
 
-        return $this->thumbnailCache = Cloudinary::getUrl($this->image_path, [
-            'width' => 56,
-            'height' => 56,
-            'crop' => 'fill',
-            'gravity' => 'auto',
-            'fetch_format' => 'auto',
-            'quality' => 'auto'
-        ]);
+        return $this->thumbnailCache = (string) Cloudinary::image($this->image_path)
+            ->resize(Resize::fill(56, 56))
+            ->delivery(Delivery::format(Format::auto()))
+            ->delivery(Delivery::quality(Quality::auto()));
     }
-
 
     public function getDetailUrlAttribute()
     {
-        if (!$this->image_path) return asset('images/default-placeholder.png');
+        if (! $this->image_path) {
+            return asset('images/default-placeholder.png');
+        }
 
-        // Versión para el detalle (ejemplo 600px de ancho)
-        return Cloudinary::getUrl($this->image_path, [
-            'width' => 600,
-            'crop' => 'limit',
-            'fetch_format' => 'auto',
-            'quality' => 'auto'
-        ]);
+        return (string) Cloudinary::image($this->image_path)
+            ->resize(Resize::limitFit(600))
+            ->delivery(Delivery::format(Format::auto()))
+            ->delivery(Delivery::quality(Quality::auto()));
     }
 }
