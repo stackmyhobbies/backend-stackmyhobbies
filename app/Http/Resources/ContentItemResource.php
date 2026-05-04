@@ -11,8 +11,12 @@ class ContentItemResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        // Definimos si es la ruta de detalle para reutilizar la lógica
-        $isDetail = $request->routeIs('content-item.show');
+        // Definimos si es la ruta de detalle o mutación para devolver todos los campos
+        $isDetail = $request->routeIs([
+            'content-item.show.user',
+            'content-item.store.user',
+            'content-item.update.user',
+        ]);
 
         return [
             'id' => $this->id,

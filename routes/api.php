@@ -51,13 +51,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/auth/sign-out', [SessionController::class, 'destroy']);
     Route::get('/auth/check-session', [SessionController::class, 'check']);
     //* ruta privada autenticada para gestionar el item
-    Route::get('/content-items', [ContentItemController::class, 'indexForUser']);
-    Route::post('/content-items', [ContentItemController::class, 'storeForUser']);
-    Route::put('/content-items/{id}/edit', [ContentItemController::class, 'updateForUser']);
+    Route::get('/content-items', [ContentItemController::class, 'indexForUser'])->name('content-item.index.user');
+    Route::post('/content-items', [ContentItemController::class, 'storeForUser'])->name('content-item.store.user');
+    Route::put('/content-items/{id}/edit', [ContentItemController::class, 'updateForUser'])->name('content-item.update.user');
 
     //*TODO PENDIENTE , ORGANIZAR EL SHOW
-    Route::get('/content-items/{slug}', [ContentItemController::class, 'show'])->name('content-item.show');
-    Route::delete('/content-items/{id}', [ContentItemController::class, 'destroyForUser']);
+    Route::get('/content-items/{slug}', [ContentItemController::class, 'show'])->name('content-item.show.user');
+    Route::delete('/content-items/{id}', [ContentItemController::class, 'destroyForUser'])->name('content-item.destroy.user');
 
     Route::get('/progress-statuses', [ProgressStatusController::class, 'indexForUser']);
     Route::get('/content-types', [ContentTypeController::class, 'indexForUser']);
