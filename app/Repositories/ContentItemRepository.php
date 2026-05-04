@@ -195,4 +195,11 @@ class ContentItemRepository implements ContentItemRepositoryInterface
             ->update(['is_active' => !$this->active]);
         return $contentItem;
     }
+
+    public function getImagePathForUser(?string $user_id, ?string $id)
+    {
+        return ContentItem::where('id', $id)
+            ->where('user_id', $user_id)
+            ->value('image_path');
+    }
 }

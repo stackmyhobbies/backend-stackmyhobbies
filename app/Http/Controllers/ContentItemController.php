@@ -187,6 +187,8 @@ class ContentItemController extends Controller
         $this->authorize('update', $request);
         $validated = $request->validated();
 
+        $image = $request->file('image');
+
         return TryHttpCatch::handle(
             function () use ($user_id, $validated, $id) {
                 $content_item = $this->contentItemService->updateForUser($user_id, $validated, $id);

@@ -166,10 +166,41 @@ class ContentItemService
         });
     }
 
-    public function updateForUser($user_id, array $data, $id): ContentItem
+    public function updateForUser(string|int|null $user_id, array $data, string|int $id, $imageFile = null): ContentItem
     {
 
-        return TryCatch::handle(function () use ($user_id, $data, $id) {
+        return TryCatch::handle(function () use ($user_id, $data, $id, $imageFile) {
+
+
+
+            // 1. Obtener image_path actual
+            $currentImage = $this->contentItemRepository->getImagePathForUser($user_id, $id);
+            // 1. Manejo de Cloudinary
+            if ($imageFile instanceof UploadedFile) {
+
+
+                // Si hay imagen previa, destruirla
+                if (!empty($currentImage)) {
+                    Cloudinary::destroy($currentImage);
+                }
+
+
+
+                $result = Cloudinary::uploadApi()->upload(
+                    $imageFile->getRealPath(),
+                    [
+                        'folder' => 'stack_my_hobbies',
+                        // opcional pero recomendable:
+                        'resource_type' => 'image',
+                        'public_id' => Str::uuid()->toString(),
+                    ]
+                );
+
+                // Guarda el public_id (correcto)
+                $data['image_path'] = $result['public_id'];
+            }
+            unset($data['image']);
+
             $tags = $data['tags'] ?? null;
             $contentData = collect($data)->except('tags')->toArray();
 
