@@ -2,8 +2,11 @@
 
 namespace App\Http\Requests\contentItem;
 
+use App\Enums\DayOfWeek;
 use App\Enums\ProgressUnit;
 use App\Enums\SegmentType;
+use App\Enums\SubSegmentType;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -22,13 +25,12 @@ class UpdateContentItemRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
 
     /* TODO ELIMINAR EL USER DE LA REQUEST */
     public function rules(): array
     {
-
 
         return [
 
@@ -42,17 +44,21 @@ class UpdateContentItemRequest extends FormRequest
             'progress_status_id' => ['required', 'exists:progress_statuses,id'],
             'segment_type' => ['nullable', Rule::in(SegmentType::values())],
             'segment_number' => ['nullable', 'integer'],
+            'segment_subtype' => ['nullable', Rule::in(SubSegmentType::values())],
+            'segment_subnumber' => ['nullable', 'integer'],
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'start_date' => ['nullable', 'date'],
-            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+            'viewing_started_at' => ['required', 'date'],
+            'viewing_finished_at' => ['nullable', 'date', 'after_or_equal:viewing_started_at'],
+            'aired_from' => ['nullable', 'date'],
+            'aired_to' => ['nullable', 'date'],
             'current_progress' => ['required', 'integer', 'min:0'],
             'total_progress' => ['required', 'integer', 'min:0'],
             'progress_unit' => ['required', Rule::in(ProgressUnit::values())],
             'rating' => ['nullable', 'integer', 'between:1,10'],
             'notes' => ['nullable', 'string'],
-            'status' => ['boolean'],
             'tags' => ['required', 'array'],
-            'tags.*' => ['integer', 'exists:tags,id']
+            'tags.*' => ['integer', 'exists:tags,id'],
+            'day_of_week' => ['nullable', Rule::in(DayOfWeek::values())],
         ];
     }
 
@@ -64,8 +70,10 @@ class UpdateContentItemRequest extends FormRequest
             'description' => 'descripción',
             'content_type_id' => 'tipo de contenido',
             'image_url' => 'URL de la imagen',
-            'start_date' => 'fecha de inicio',
-            'end_date' => 'fecha de finalización',
+            'viewing_started_at' => 'fecha de inicio de visualización',
+            'viewing_finished_at' => 'fecha de fin de visualización',
+            'aired_from' => 'fecha de inicio de emisión',
+            'aired_to' => 'fecha de fin de emisión',
             'current_progress' => 'progreso actual',
             'total_progress' => 'progreso total',
             'rating' => 'calificación',
@@ -81,7 +89,7 @@ class UpdateContentItemRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success' => false,
             'message' => 'Validation errors',
-            'errors' => $validator->errors()
+            'errors' => $validator->errors(),
         ]));
     }
 }

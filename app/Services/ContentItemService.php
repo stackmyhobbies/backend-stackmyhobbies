@@ -2,25 +2,24 @@
 
 namespace App\Services;
 
-
 use App\Interfaces\ContentItemRepositoryInterface;
 use App\Models\ContentItem;
 use App\Models\ContentTag;
 use App\Support\TryCatch;
-
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
 
 class ContentItemService
 {
-
-
-
-    /*TODO PENDIENTE EL STOREFOR USER  */
+    /* TODO PENDIENTE EL STOREFOR USER */
 
     public function __construct(private ContentItemRepositoryInterface $contentItemRepository) {}
 
     public function indexForUser(?string $user_id, array $filters = [], ?int $perPage = null)
     {
-        $with =  ['tags', 'contentType', 'progressStatus'];
+        $with = ['tags', 'contentType', 'progressStatus'];
+
         return $this->contentItemRepository->indexForUser($user_id, with: $with, filters: $filters, perPage: $perPage);
     }
 
@@ -75,11 +74,11 @@ class ContentItemService
                     ]);
                 }
 
-
                 $contentData = collect($data)->except('tags')->toArray();
 
                 $content_item = $this->contentItemRepository->store($user_id, $contentData);
                 $content_item->tags()->sync($data['tags']);
+
                 return $content_item->load([
                     'tags',
                     'contentType',
@@ -96,11 +95,22 @@ class ContentItemService
             function () use ($user_id, $data, $imageFile) {
 
                 // 1. Manejo de Cloudinary
-                if ($imageFile) {
-                    $upload = $imageFile->storeOnCloudinary('stack_my_hobbies');
-                    $data['image_path'] = $upload->getPublicId();
-                }
+                if ($imageFile instanceof UploadedFile) {
 
+                    $result = Cloudinary::uploadApi()->upload(
+                        $imageFile->getRealPath(),
+                        [
+                            'folder' => 'stack_my_hobbies',
+                            // opcional pero recomendable:
+                            'resource_type' => 'image',
+                            'public_id' => Str::uuid()->toString(),
+                        ]
+                    );
+
+                    // Guarda el public_id (correcto)
+                    $data['image_path'] = $result['public_id'];
+                }
+                unset($data['image']);
                 // 2. Lógica de reactivación (Item existente)
                 $existing = ContentItem::where('user_id', $user_id)
                     ->where('title', $data['title'])
@@ -126,7 +136,7 @@ class ContentItemService
                 }
 
                 // 3. Creación de item nuevo
-                $contentData = collect($data)->except('tags')->toArray();
+                $contentData = collect($data)->except('tags', 'image')->toArray();
 
                 $content_item = $this->contentItemRepository->storeForUser($user_id, $contentData);
 
@@ -138,7 +148,6 @@ class ContentItemService
             }
         );
     }
-
 
     public function update(array $data, $id)
     {
@@ -152,6 +161,7 @@ class ContentItemService
             if ($tags !== null && method_exists($contentItem, 'tags')) {
                 $contentItem->tags()->sync($tags);
             }
+
             return $contentItem;
         });
     }
@@ -168,6 +178,7 @@ class ContentItemService
             if ($tags !== null && method_exists($contentItem, 'tags')) {
                 $contentItem->tags()->sync($tags);
             }
+
             return $contentItem;
         });
     }

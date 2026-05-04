@@ -2,19 +2,18 @@
 
 namespace App\Exceptions\Renderers;
 
-use Throwable;
-use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Auth\AuthenticationException;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Classes\ApiResponseClass;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Throwable;
 
 class ApiExceptionRenderer
 {
@@ -59,10 +58,11 @@ class ApiExceptionRenderer
                 $previous = $e->getPrevious();
                 if ($previous instanceof ModelNotFoundException) {
                     $model = class_basename($previous->getModel());
+
                     return ApiResponseClass::sendError("{$model} not found!", [], 404);
                 }
 
-                return ApiResponseClass::sendError("Recurso no encontrado", [], 404);
+                return ApiResponseClass::sendError('Recurso no encontrado', [], 404);
             }
         });
 
