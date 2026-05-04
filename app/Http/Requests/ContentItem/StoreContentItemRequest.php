@@ -65,7 +65,6 @@ class StoreContentItemRequest extends FormRequest
             'title' => 'título',
             'description' => 'descripción',
             'content_type_id' => 'tipo de contenido',
-            'image_url' => 'URL de la imagen',
             'viewing_started_at' => 'fecha de inicio de visualización',
             'viewing_finished_at' => 'fecha de fin de visualización',
             'aired_from' => 'fecha de inicio de emisión',

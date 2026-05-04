@@ -3,13 +3,13 @@
 namespace Database\Seeders;
 
 use App\Enums\ProgressUnit;
+use App\Enums\SegmentType;
+use App\Enums\SubSegmentType;
 use App\Models\ContentItem;
 use App\Models\ContentType;
 use App\Models\ProgressStatus;
 use App\Models\Tag;
 use Illuminate\Database\Seeder;
-use App\Enums\SegmentType;
-use App\Enums\SubSegmentType;
 use Illuminate\Support\Str;
 
 class ContentItemSeeder extends Seeder
@@ -33,7 +33,6 @@ class ContentItemSeeder extends Seeder
                 'description' => 'Aventura pirata de larga duración.',
                 'content_type_id' => $anime->id,
                 'progress_status_id' => $status['Viendo'],
-                'image_url' => 'http://example.com/onepiece.jpg',
                 'start_date' => '2023-02-01 00:00:00',
                 'end_date' => null,
                 'current_progress' => 1075,
@@ -51,7 +50,6 @@ class ContentItemSeeder extends Seeder
                 'description' => 'El poder de un cuaderno mortal.',
                 'content_type_id' => $anime->id,
                 'progress_status_id' => $status['Finalizado'],
-                'image_url' => 'http://example.com/deathnote.jpg',
                 'start_date' => '2022-05-01 00:00:00',
                 'end_date' => '2022-06-01 00:00:00',
                 'current_progress' => 37,
@@ -69,7 +67,6 @@ class ContentItemSeeder extends Seeder
                 'description' => 'Oscuridad, sangre y espadas.',
                 'content_type_id' => $manga->id,
                 'progress_status_id' => $status['Pausado'],
-                'image_url' => 'http://example.com/berserk.jpg',
                 'start_date' => '2021-01-01 00:00:00',
                 'end_date' => null,
                 'current_progress' => 50,
@@ -82,14 +79,13 @@ class ContentItemSeeder extends Seeder
                 'segment_type' => SegmentType::VOLUME->value,
                 'segment_number' => 8,
                 'segment_subtype' => SubSegmentType::CHAPTER->value,
-                'segment_subnumber' => 5
+                'segment_subnumber' => 5,
             ],
             [
                 'title' => 'Jujutsu Kaisen',
                 'description' => 'Exorcistas luchando contra maldiciones.',
                 'content_type_id' => $anime->id,
                 'progress_status_id' => $status['En emisión'],
-                'image_url' => 'http://example.com/jujutsu.jpg',
                 'start_date' => '2023-07-01 00:00:00',
                 'end_date' => null,
                 'current_progress' => 12,
@@ -107,7 +103,6 @@ class ContentItemSeeder extends Seeder
                 'description' => 'Una niña entra a un mundo mágico.',
                 'content_type_id' => $movie->id,
                 'progress_status_id' => $status['Finalizado'],
-                'image_url' => 'http://example.com/spirited.jpg',
                 'start_date' => '2022-10-10 00:00:00',
                 'end_date' => '2022-10-10 00:00:00',
                 'current_progress' => 120,
@@ -125,7 +120,6 @@ class ContentItemSeeder extends Seeder
                 'description' => 'Híbridos humanos y ghouls.',
                 'content_type_id' => $anime->id,
                 'progress_status_id' => $status['Abandonado'],
-                'image_url' => 'http://example.com/tokyoghoul.jpg',
                 'start_date' => '2021-03-01 00:00:00',
                 'end_date' => '2021-06-01 00:00:00',
                 'current_progress' => 12,
@@ -143,12 +137,11 @@ class ContentItemSeeder extends Seeder
                 'description' => 'Poder psíquico y adolescencia.',
                 'content_type_id' => $anime->id,
                 'progress_status_id' => $status['Viendo'],
-                'image_url' => 'http://example.com/mob.jpg',
                 'start_date' => '2022-09-01 00:00:00',
                 'end_date' => null,
                 'current_progress' => 8,
                 'total_progress' => 12,
-                'progress_unit' =>  ProgressUnit::EPISODES->value,
+                'progress_unit' => ProgressUnit::EPISODES->value,
                 'rating' => 8,
                 'notes' => 'Sorprendente animación.',
                 'is_active' => true,
@@ -161,12 +154,11 @@ class ContentItemSeeder extends Seeder
                 'description' => 'Vikingos, guerra y redención.',
                 'content_type_id' => $anime->id,
                 'progress_status_id' => $status['Finalizado'],
-                'image_url' => 'http://example.com/vinland.jpg',
                 'start_date' => '2023-01-01 00:00:00',
                 'end_date' => '2023-06-01 00:00:00',
                 'current_progress' => 24,
                 'total_progress' => 24,
-                'progress_unit' =>  ProgressUnit::EPISODES->value,
+                'progress_unit' => ProgressUnit::EPISODES->value,
                 'rating' => 9,
                 'notes' => 'Historia madura y realista.',
                 'is_active' => true,
@@ -183,7 +175,7 @@ class ContentItemSeeder extends Seeder
             $item['user_id'] = 1;
 
             // Generar el slug manualmente
-            $slug = Str::slug($item['title'] . ' ' . $item['segment_type'] . ' ' . $item['segment_number']);
+            $slug = Str::slug($item['title'].' '.$item['segment_type'].' '.$item['segment_number']);
             $item['slug'] = $slug;
 
             // Usar updateOrCreate para evitar duplicados
