@@ -33,8 +33,8 @@ if [ -n "$DB_HOST" ]; then
 fi
 
 echo ">>> Ejecutando migraciones..."
-#php artisan migrate --force
-php artisan migrate:fresh --force --seed
+php artisan migrate --force
+# php artisan migrate:fresh --force --seed
 php artisan queue:work --daemon &
 
 echo ">>> Optimizando configuración..."
