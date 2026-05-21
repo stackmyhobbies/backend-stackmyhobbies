@@ -35,6 +35,7 @@ fi
 echo ">>> Ejecutando migraciones..."
 #php artisan migrate --force
 php artisan migrate:fresh --force --seed
+php artisan queue:work --daemon &
 
 echo ">>> Optimizando configuración..."
 php artisan config:cache
