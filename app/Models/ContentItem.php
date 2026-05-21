@@ -6,14 +6,17 @@ use App\Enums\DayOfWeek;
 use App\Enums\ProgressUnit;
 use App\Enums\SegmentType;
 use App\Enums\SubSegmentType;
+use App\Policies\ContentItemPolicy;
 use Cloudinary\Transformation\Delivery;
 use Cloudinary\Transformation\Format;
 use Cloudinary\Transformation\Quality;
 use Cloudinary\Transformation\Resize;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Model;
 
+#[UsePolicy(ContentItemPolicy::class)]
 class ContentItem extends Model
 {
     use Sluggable;

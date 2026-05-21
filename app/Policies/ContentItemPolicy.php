@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\ContentItem;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ContentItemPolicy
 {
@@ -13,7 +12,7 @@ class ContentItemPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->is_admin;
     }
 
     /**

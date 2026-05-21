@@ -51,7 +51,7 @@ class StoreContentItemRequest extends FormRequest
             'current_progress' => ['required', 'integer', 'min:0'],
             'total_progress' => ['required', 'integer', 'min:0'],
             'progress_unit' => ['required', Rule::in(ProgressUnit::values())],
-            'rating' => ['nullable', 'integer', 'between:1,10'],
+            'rating' => ['nullable', 'decimal:1', 'between:1.0,5.0'],
             'notes' => ['nullable', 'string'],
             'tags' => ['required', 'array'],
             'tags.*' => ['integer', 'exists:tags,id'],

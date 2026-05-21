@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\ContentType;
 
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -18,6 +17,7 @@ class ContentTypeResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'slug' => $this->slug,
             'status' => $this->status ?? true,
         ];
     }
