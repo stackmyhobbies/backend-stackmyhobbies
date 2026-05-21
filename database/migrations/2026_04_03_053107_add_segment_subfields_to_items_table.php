@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('content_items', function (Blueprint $table) {
             //
-            $table->string('segment_subtype')->nullable()->after('segment_label');
+            $table->string('segment_subtype')->nullable()->after('segment_number');
             $table->integer('segment_subnumber')->nullable()->after('segment_subtype');
         });
     }

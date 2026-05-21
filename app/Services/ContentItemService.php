@@ -12,8 +12,6 @@ use Illuminate\Support\Str;
 
 class ContentItemService
 {
-    /* TODO PENDIENTE EL STOREFOR USER */
-
     public function __construct(private ContentItemRepositoryInterface $contentItemRepository) {}
 
     public function indexForUser(?string $user_id, array $filters = [], ?int $perPage = null)
@@ -25,7 +23,6 @@ class ContentItemService
 
     public function index(array $filters = [], ?int $perPage = null)
     {
-        // Incluimos 'user' para que el admin vea el dueño del item
         $with = ['tags', 'contentType', 'progressStatus', 'user'];
 
         return $this->contentItemRepository->index(
@@ -45,12 +42,21 @@ class ContentItemService
         return $this->contentItemRepository->showForUser($user_id, $slug);
     }
 
+    public function find(string|int $id): ContentItem
+    {
+        return $this->contentItemRepository->find($id);
+    }
+
+    public function findForUser(?string $user_id, string|int $id): ContentItem
+    {
+        return $this->contentItemRepository->findForUser($user_id, $id);
+    }
+
     public function store(?string $user_id, array $data)
     {
         return TryCatch::handle(
             function () use ($user_id, $data) {
 
-                /** Para activar content-item inactivo  */
                 $existing = ContentItem::where('title', $data['title'])
                     ->where('segment_type', $data['segment_type'])
                     ->where('segment_number', $data['segment_number'])
@@ -88,30 +94,26 @@ class ContentItemService
         );
     }
 
-    // Añadimos ?UploadedFile $imageFile como parámetro
     public function storeForUser(?string $user_id, array $data, $imageFile = null)
     {
         return TryCatch::handle(
             function () use ($user_id, $data, $imageFile) {
 
-                // 1. Manejo de Cloudinary
                 if ($imageFile instanceof UploadedFile) {
 
                     $result = Cloudinary::uploadApi()->upload(
                         $imageFile->getRealPath(),
                         [
                             'folder' => 'stack_my_hobbies',
-                            // opcional pero recomendable:
                             'resource_type' => 'image',
                             'public_id' => Str::uuid()->toString(),
                         ]
                     );
 
-                    // Guarda el public_id (correcto)
                     $data['image_path'] = $result['public_id'];
                 }
                 unset($data['image']);
-                // 2. Lógica de reactivación (Item existente)
+
                 $existing = ContentItem::where('user_id', $user_id)
                     ->where('title', $data['title'])
                     ->where('segment_type', $data['segment_type'])
@@ -120,7 +122,6 @@ class ContentItemService
                     ->first();
 
                 if ($existing) {
-                    // Si existe, actualizamos status y el posible nuevo image_path
                     $updateData = ['is_active' => true];
                     if (isset($data['image_path'])) {
                         $updateData['image_path'] = $data['image_path'];
@@ -128,14 +129,12 @@ class ContentItemService
 
                     $existing->update($updateData);
 
-                    // Reactivamos tags
                     ContentTag::where('content_item_id', $existing->id)
                         ->update(['is_active' => true]);
 
                     return $existing->load(['tags', 'contentType', 'progressStatus']);
                 }
 
-                // 3. Creación de item nuevo
                 $contentData = collect($data)->except('tags', 'image')->toArray();
 
                 $content_item = $this->contentItemRepository->storeForUser($user_id, $contentData);
@@ -149,14 +148,13 @@ class ContentItemService
         );
     }
 
-    public function update(array $data, $id)
+    public function update(array $data, ContentItem $contentItem): ContentItem
     {
-
-        return TryCatch::handle(function () use ($data, $id) {
+        return TryCatch::handle(function () use ($data, $contentItem) {
             $tags = $data['tags'] ?? null;
             $contentData = collect($data)->except('tags')->toArray();
 
-            $contentItem = $this->contentItemRepository->update($contentData, $id);
+            $contentItem = $this->contentItemRepository->update($contentData, $contentItem);
 
             if ($tags !== null && method_exists($contentItem, 'tags')) {
                 $contentItem->tags()->sync($tags);
@@ -166,14 +164,33 @@ class ContentItemService
         });
     }
 
-    public function updateForUser($user_id, array $data, $id): ContentItem
+    public function updateForUser(array $data, ContentItem $contentItem, $imageFile = null): ContentItem
     {
+        return TryCatch::handle(function () use ($data, $contentItem, $imageFile) {
 
-        return TryCatch::handle(function () use ($user_id, $data, $id) {
+            if ($imageFile instanceof UploadedFile) {
+
+                if (! empty($contentItem->image_path)) {
+                    Cloudinary::uploadApi()->destroy($contentItem->image_path, []);
+                }
+
+                $result = Cloudinary::uploadApi()->upload(
+                    $imageFile->getRealPath(),
+                    [
+                        'folder' => 'stack_my_hobbies',
+                        'resource_type' => 'image',
+                        'public_id' => Str::uuid()->toString(),
+                    ]
+                );
+
+                $data['image_path'] = $result['public_id'];
+            }
+            unset($data['image']);
+
             $tags = $data['tags'] ?? null;
             $contentData = collect($data)->except('tags')->toArray();
 
-            $contentItem = $this->contentItemRepository->updateForUser($user_id, $contentData, $id);
+            $contentItem = $this->contentItemRepository->updateForUser($contentData, $contentItem);
 
             if ($tags !== null && method_exists($contentItem, 'tags')) {
                 $contentItem->tags()->sync($tags);
@@ -183,17 +200,17 @@ class ContentItemService
         });
     }
 
-    public function destroy($id)
+    public function destroy(ContentItem $contentItem): ContentItem
     {
-        return TryCatch::handle(function () use ($id) {
-            return $this->contentItemRepository->destroy($id);
+        return TryCatch::handle(function () use ($contentItem) {
+            return $this->contentItemRepository->destroy($contentItem);
         });
     }
 
-    public function destroyForUser($user_id, $id)
+    public function destroyForUser(ContentItem $contentItem): ContentItem
     {
-        return TryCatch::handle(function () use ($user_id, $id) {
-            return $this->contentItemRepository->destroyForUser($user_id, $id);
+        return TryCatch::handle(function () use ($contentItem) {
+            return $this->contentItemRepository->destroyForUser($contentItem);
         });
     }
 }

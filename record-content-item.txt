@@ -8,7 +8,7 @@
     "segment_type": "season",
     "segment_number": 1,
       
-    "image_url": "http://example.com/aot.jpg",
+    "image_path": null,
     "start_date": "2023-01-01 00:00:00",
     "end_date": "2023-01-02 00:00:00",
     "current_progress": 5,
@@ -31,7 +31,7 @@
     "segment_type": "season",
     "segment_number": 1,
       
-    "image_url": "http://example.com/aot.jpg",
+    "image_path": null,
     "start_date": "2023-01-01 00:00:00",
     "end_date": "2023-01-02 00:00:00",
     "current_progress": 5,
