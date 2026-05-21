@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\contentItem;
+namespace App\Http\Requests\ContentItem;
 
 use App\Enums\DayOfWeek;
 use App\Enums\ProgressUnit;
@@ -54,7 +54,7 @@ class UpdateContentItemRequest extends FormRequest
             'current_progress' => ['required', 'integer', 'min:0'],
             'total_progress' => ['required', 'integer', 'min:0'],
             'progress_unit' => ['required', Rule::in(ProgressUnit::values())],
-            'rating' => ['nullable', 'integer', 'between:1,10'],
+            'rating' => ['nullable', 'decimal:1', 'between:1.0,5.0'],
             'notes' => ['nullable', 'string'],
             'tags' => ['required', 'array'],
             'tags.*' => ['integer', 'exists:tags,id'],
@@ -69,7 +69,6 @@ class UpdateContentItemRequest extends FormRequest
             'title' => 'título',
             'description' => 'descripción',
             'content_type_id' => 'tipo de contenido',
-            'image_url' => 'URL de la imagen',
             'viewing_started_at' => 'fecha de inicio de visualización',
             'viewing_finished_at' => 'fecha de fin de visualización',
             'aired_from' => 'fecha de inicio de emisión',

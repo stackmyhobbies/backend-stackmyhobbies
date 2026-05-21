@@ -12,6 +12,7 @@ class ProgressStatusResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'slug' => $this->slug,
             'status' => $this->status,
         ];
     }

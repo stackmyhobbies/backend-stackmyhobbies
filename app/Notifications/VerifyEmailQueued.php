@@ -3,12 +3,10 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\URL;
 
 class VerifyEmailQueued extends Notification
 {
@@ -51,7 +49,7 @@ class VerifyEmailQueued extends Notification
     protected function verificationUrl($notifiable)
     {
         // Genera la URL temporal firmada para la verificación
-        return URL::temporarySignedRoute(
+        $temporarySignedUrl = URL::temporarySignedRoute(
             'verification.verify', // Nombre de la ruta
             Carbon::now()->addMinutes(60),
             [
@@ -59,7 +57,11 @@ class VerifyEmailQueued extends Notification
                 'hash' => sha1($notifiable->getEmailForVerification()),
             ]
         );
+
+        // Redirige al frontend pasando la URL firmada como parámetro
+        return config('app.frontend_url').'auth/verify-email?url='.urlencode($temporarySignedUrl);
     }
+
     /**
      * Get the array representation of the notification.
      *

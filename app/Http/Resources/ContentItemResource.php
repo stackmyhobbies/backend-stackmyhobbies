@@ -11,14 +11,19 @@ class ContentItemResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        // Definimos si es la ruta de detalle para reutilizar la lógica
-        $isDetail = $request->routeIs('content-item.show');
+        // Definimos si es la ruta de detalle o mutación para devolver todos los campos
+        $isDetail = $request->routeIs([
+            'content-item.show.user',
+            'content-item.store.user',
+            'content-item.update.user',
+        ]);
 
         return [
             'id' => $this->id,
             'title' => $this->title,
             'segment_label' => $this->segment_label,
             'thumbnail_url' => $this->thumbnail_url,
+            'detail_url' => $this->when($isDetail, $this->detail_url),
 
             // Datos de progreso (Los usas en la tabla)
             'current_progress' => $this->current_progress,
@@ -27,7 +32,7 @@ class ContentItemResource extends JsonResource
             'progress_unit' => $this->progress_unit->value ?? null,
 
             // Relaciones (Siempre que estén cargadas con eager loading)
-            'tags' => $this->whenLoaded('tags', fn() => $this->tags->map(fn($tag) => [
+            'tags' => $this->whenLoaded('tags', fn () => $this->tags->map(fn ($tag) => [
                 'id' => $tag->id,
                 'name' => $tag->name,
             ])),
