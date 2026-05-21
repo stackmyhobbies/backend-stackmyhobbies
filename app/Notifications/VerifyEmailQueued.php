@@ -59,7 +59,7 @@ class VerifyEmailQueued extends Notification
         );
 
         // Redirige al frontend pasando la URL firmada como parámetro
-        return config('app.frontend_url').'auth/verify-email?url='.urlencode($temporarySignedUrl);
+        return rtrim(config('app.frontend_url'), '/').'/auth/verify-email?url='.urlencode($temporarySignedUrl);
     }
 
     /**
