@@ -30,7 +30,6 @@ class ContentItemController extends Controller
             'search',
             'user_id',
             'content_type',
-            'is_active',
             'progress',
             'tags',
         ]);
