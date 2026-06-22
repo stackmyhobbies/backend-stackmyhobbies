@@ -11,7 +11,6 @@ use Illuminate\Http\Response;
 
 class ForgotPasswordController extends Controller
 {
-
     public function __construct(protected ForgotPasswordService $forgotPasswordService) {}
 
     public function __invoke(ForgotPasswordRequest $request)

@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\ContentType;
 use App\Enums\ProgressUnit;
 use App\Enums\SegmentType;
 use App\Enums\SubSegmentType;
+use App\Models\ContentType;
 use Illuminate\Database\Seeder;
 
 class ContentTypeSeeder extends Seeder
@@ -21,14 +21,14 @@ class ContentTypeSeeder extends Seeder
                 'status' => true,
                 'allowed_units' => [
                     ProgressUnit::PAGES->value,
-                    ProgressUnit::CHAPTERS->value
+                    ProgressUnit::CHAPTERS->value,
                 ],
                 'allowed_segment_types' => [
-                    SegmentType::VOLUME->value
+                    SegmentType::VOLUME->value,
                 ],
                 'allowed_subsegment_types' => [
                     SubSegmentType::CHAPTER->value,
-                    SubSegmentType::PAGE->value
+                    SubSegmentType::PAGE->value,
                 ],
             ],
             [
@@ -36,14 +36,14 @@ class ContentTypeSeeder extends Seeder
                 'status' => true,
                 'allowed_units' => [
                     ProgressUnit::PAGES->value,
-                    ProgressUnit::CHAPTERS->value
+                    ProgressUnit::CHAPTERS->value,
                 ],
                 'allowed_segment_types' => [
-                    SegmentType::VOLUME->value
+                    SegmentType::VOLUME->value,
                 ],
                 'allowed_subsegment_types' => [
                     SubSegmentType::CHAPTER->value,
-                    SubSegmentType::PAGE->value
+                    SubSegmentType::PAGE->value,
                 ],
             ],
             [
@@ -51,14 +51,14 @@ class ContentTypeSeeder extends Seeder
                 'status' => true,
                 'allowed_units' => [
                     ProgressUnit::PAGES->value,
-                    ProgressUnit::CHAPTERS->value
+                    ProgressUnit::CHAPTERS->value,
                 ],
                 'allowed_segment_types' => [
                     SegmentType::VOLUME->value,
-                    SegmentType::EDITION->value
+                    SegmentType::EDITION->value,
                 ],
                 'allowed_subsegment_types' => [
-                    SubSegmentType::CHAPTER->value
+                    SubSegmentType::CHAPTER->value,
                 ],
             ],
             [
@@ -66,56 +66,56 @@ class ContentTypeSeeder extends Seeder
                 'status' => true,
                 'allowed_units' => [
                     ProgressUnit::PAGES->value,
-                    ProgressUnit::CHAPTERS->value
+                    ProgressUnit::CHAPTERS->value,
                 ],
                 'allowed_segment_types' => [
                     SegmentType::VOLUME->value,
-                    SegmentType::PART->value
+                    SegmentType::PART->value,
                 ],
                 'allowed_subsegment_types' => [
-                    SubSegmentType::CHAPTER->value
+                    SubSegmentType::CHAPTER->value,
                 ],
             ],
             [
                 'name' => 'anime',
                 'status' => true,
                 'allowed_units' => [
-                    ProgressUnit::EPISODES->value
+                    ProgressUnit::EPISODES->value,
                 ],
                 'allowed_segment_types' => [
                     SegmentType::SEASON->value,
-                    SegmentType::PART->value
+                    SegmentType::PART->value,
                 ],
                 'allowed_subsegment_types' => [
                     SubSegmentType::EPISODE->value,
                     SubSegmentType::OVA->value,
-                    SubSegmentType::SPECIAL->value
+                    SubSegmentType::SPECIAL->value,
                 ],
             ],
             [
                 'name' => 'serie',
                 'status' => true,
                 'allowed_units' => [
-                    ProgressUnit::EPISODES->value
+                    ProgressUnit::EPISODES->value,
                 ],
                 'allowed_segment_types' => [
                     SegmentType::SEASON->value,
-                    SegmentType::PART->value
+                    SegmentType::PART->value,
                 ],
                 'allowed_subsegment_types' => [
-                    SubSegmentType::EPISODE->value
+                    SubSegmentType::EPISODE->value,
                 ],
             ],
             [
                 'name' => 'película',
                 'status' => true,
                 'allowed_units' => [
-                    ProgressUnit::MINUTES->value
+                    ProgressUnit::MINUTES->value,
                 ],
                 'allowed_segment_types' => [
                     SegmentType::MOVIE->value,
                     SegmentType::PART->value,
-                    SegmentType::SINGLE->value
+                    SegmentType::SINGLE->value,
                 ],
                 'allowed_subsegment_types' => [], // Atómico, no tiene subsegmentos estándar
             ],
@@ -124,16 +124,16 @@ class ContentTypeSeeder extends Seeder
                 'status' => true,
                 'allowed_units' => [
                     ProgressUnit::MINUTES->value,
-                    ProgressUnit::EPISODES->value
+                    ProgressUnit::EPISODES->value,
                 ],
                 'allowed_segment_types' => [
                     SegmentType::MOVIE->value,
                     SegmentType::PART->value,
-                    SegmentType::SINGLE->value
+                    SegmentType::SINGLE->value,
                 ],
                 'allowed_subsegment_types' => [
                     SubSegmentType::EPISODE->value,
-                    SubSegmentType::PART->value
+                    SubSegmentType::PART->value,
                 ],
             ],
         ];

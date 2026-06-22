@@ -9,7 +9,6 @@ use App\Services\Auth\ResetPasswordService;
 use App\Support\TryHttpCatch;
 use Illuminate\Http\Response;
 
-
 class ResetPasswordController extends Controller
 {
     public function __construct(
@@ -22,8 +21,6 @@ class ResetPasswordController extends Controller
             $validated = $request->validated();
 
             $this->resetPasswordService->reset($validated);
-
-
 
             return ApiResponseClass::sendResponse(
                 null,

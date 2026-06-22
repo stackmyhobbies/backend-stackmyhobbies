@@ -2,26 +2,17 @@
 
 namespace App\Services;
 
-use App\Classes\ApiResponseClass;
 use App\Interfaces\ContentStatusRepositoryInterface;
-use App\Interfaces\ContentTypeRepositoryInterface;
 use App\Support\TryCatch;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 
 class ContentStatusService
 {
-
     public function __construct(private ContentStatusRepositoryInterface $contentStatusRepository) {}
-
 
     public function indexForUser()
     {
         return $this->contentStatusRepository->indexForUser();
     }
-
 
     public function index(?array $filters = [], ?int $perPage = null)
     {

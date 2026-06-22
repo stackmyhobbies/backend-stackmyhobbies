@@ -9,26 +9,23 @@ use App\Models\Tag;
 
 class TagRepository implements TagRepositoryInterface
 {
-
-
     private $active = true;
 
     public function indexForUser()
     {
-        return Tag::where("status", $this->active)->get();
+        return Tag::where('status', $this->active)->get();
     }
-
 
     public function index(?array $with = [], ?array $filters = [], ?int $perPage = null)
     {
 
         $query = Tag::query();
 
-        if (!empty($with)) {
+        if (! empty($with)) {
             $query->with($with);
         }
 
-        if (!empty($filters)) {
+        if (! empty($filters)) {
             foreach ($filters as $field => $value) {
                 $query->where($field, $value);
             }
@@ -40,11 +37,12 @@ class TagRepository implements TagRepositoryInterface
 
         return $query->get();
     }
-    //*todo aqui quedaste -> consulta de tag basado en el user con su content-item
+
+    // *todo aqui quedaste -> consulta de tag basado en el user con su content-item
     public function showForUser($slug, $userId)
     {
 
-        $query =  Tag::query();
+        $query = Tag::query();
 
         $query->where('slug', $slug)
             ->whereHas('contentItems', function ($query) use ($userId) {
@@ -65,16 +63,14 @@ class TagRepository implements TagRepositoryInterface
         if ($perPage) {
             return $contentItemsQuery->paginate($perPage);
         }
+
         return $contentItemsQuery->paginate(10);
     }
-
 
     public function show($slug)
     {
         return Tag::where('slug', $slug)->firstOrFail();
     }
-
-
 
     public function store(array $data)
     {
@@ -85,16 +81,17 @@ class TagRepository implements TagRepositoryInterface
     {
         $tag = Tag::where('status', $this->active)->where('id', $id)->firstOrFail();
         $tag->update($data);
+
         return $tag->fresh();
     }
 
     public function destroy($id)
     {
         $tag = Tag::where('status', $this->active)->where('id', $id)->firstOrFail();
-        $tag->update(['status' => !$this->active]);
+        $tag->update(['status' => ! $this->active]);
 
         ContentTag::where('tag_id', $tag->id)
-            ->update(['status' => !$this->active]);
+            ->update(['status' => ! $this->active]);
 
         return $tag;
     }

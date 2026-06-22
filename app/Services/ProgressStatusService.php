@@ -17,7 +17,7 @@ class ProgressStatusService
     public function index(?array $filters = [], ?int $perPage = null)
     {
         return TryCatch::handle(
-            fn() => $this->progressStatusRepository->index(null, $filters, $perPage)
+            fn () => $this->progressStatusRepository->index(null, $filters, $perPage)
         );
     }
 
@@ -28,16 +28,16 @@ class ProgressStatusService
 
     public function store(array $data)
     {
-        return TryCatch::handle(fn() => $this->progressStatusRepository->store($data));
+        return TryCatch::handle(fn () => $this->progressStatusRepository->store($data));
     }
 
     public function update(array $data, $id)
     {
-        return TryCatch::handle(fn() => $this->progressStatusRepository->update($data, $id));
+        return TryCatch::handle(fn () => $this->progressStatusRepository->update($data, $id));
     }
 
     public function destroy($id)
     {
-        return TryCatch::handle(fn() => $this->progressStatusRepository->destroy($id));
+        return TryCatch::handle(fn () => $this->progressStatusRepository->destroy($id));
     }
 }

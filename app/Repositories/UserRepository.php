@@ -37,6 +37,7 @@ class UserRepository implements UserRepositoryInterface
     {
 
         $user = $this->show($id);
+
         return $user->disable();
     }
 }

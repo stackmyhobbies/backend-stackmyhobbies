@@ -9,9 +9,10 @@ class ContentStatus extends Model
     protected $table = 'content_statuses';
 
     protected $fillable = [
-        "name",
-        "status"
+        'name',
+        'status',
     ];
+
     //
     public function contentItems()
     {

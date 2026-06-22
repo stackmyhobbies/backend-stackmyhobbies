@@ -3,6 +3,7 @@ set -e
 
 echo ">>> Entrypoint: verificando entorno..."
 
+# Espera a la base de datos
 if [ -n "$DB_HOST" ]; then
   echo ">>> Esperando a la base de datos en $DB_HOST:${DB_PORT:-5432}..."
   MAX_TRIES=30
@@ -32,21 +33,40 @@ if [ -n "$DB_HOST" ]; then
   echo ">>> Base de datos lista."
 fi
 
+echo ">>> Ajustando permisos de storage..."
+chown -R laravel:laravel /var/www/html/storage /var/www/html/bootstrap/cache
+chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
 echo ">>> Ejecutando migraciones..."
 php artisan migrate --force
-# php artisan migrate:fresh --force --seed
-php artisan queue:work --daemon &
+
+echo ">>> Limpiando caches..."
+php artisan config:clear
+php artisan cache:clear
+
+echo ">>> Enlazando storage..."
+php artisan storage:link --quiet 2>/dev/null || true
 
 echo ">>> Optimizando configuración..."
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-echo ">>> Enlazando storage..."
-php artisan storage:link --quiet 2>/dev/null || true
+echo ">>> Iniciando php-fpm en background..."
+php-fpm &
 
-echo ">>> Iniciando Caddy en segundo plano..."
-caddy run --config /etc/caddy/Caddyfile --adapter caddyfile &
+echo ">>> Esperando que php-fpm esté listo en 127.0.0.1:9000..."
+COUNT=0
+until nc -z 127.0.0.1 9000 2>/dev/null; do
+  COUNT=$((COUNT + 1))
+  echo ">>> Intento $COUNT/15 esperando php-fpm..."
+  if [ "$COUNT" -ge 15 ]; then
+    echo ">>> ERROR: php-fpm no levantó. Abortando."
+    exit 1
+  fi
+  sleep 1
+done
+echo ">>> php-fpm listo."
 
-echo ">>> Iniciando php-fpm..."
-exec "$@"
+echo ">>> Iniciando Caddy en :${PORT:-8080}..."
+exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile

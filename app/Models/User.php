@@ -2,18 +2,17 @@
 
 namespace App\Models;
 
+use App\Notifications\VerifyEmailQueued;
+use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-use App\Notifications\VerifyEmailQueued;
-
 class User extends Authenticatable implements MustVerifyEmail
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
@@ -28,7 +27,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'username',
         'password',
         'status',
-        'email_verified_at'
+        'email_verified_at',
 
     ];
 
@@ -41,8 +40,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'remember_token',
     ];
-
-
 
     public function disable()
     {
@@ -64,12 +61,12 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'is_admin' => 'boolean'
+            'is_admin' => 'boolean',
         ];
     }
 
     public function sendEmailVerificationNotification()
     {
-        $this->notify(new VerifyEmailQueued());
+        $this->notify(new VerifyEmailQueued);
     }
 }

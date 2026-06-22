@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Carbon;
@@ -10,8 +9,6 @@ use Illuminate\Support\Facades\URL;
 
 class VerifyEmailQueued extends Notification
 {
-    use Queueable;
-
     /**
      * Create a new notification instance.
      */
@@ -59,7 +56,7 @@ class VerifyEmailQueued extends Notification
         );
 
         // Redirige al frontend pasando la URL firmada como parámetro
-        return rtrim(config('app.frontend_url'), '/').'/auth/verify-email?url='.urlencode($temporarySignedUrl);
+        return rtrim(config('app.frontend_url', ''), '/').'/auth/verify-email?url='.urlencode($temporarySignedUrl);
     }
 
     /**

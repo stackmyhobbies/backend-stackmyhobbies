@@ -8,13 +8,11 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ContentTypeRepository implements ContentTypeRepositoryInterface
 {
-
-
     private $active = true;
 
     public function indexForUser(): Collection
     {
-        return ContentType::where("status", $this->active)->get();
+        return ContentType::where('status', $this->active)->get();
     }
 
     public function index(?array $with = [], ?array $filters = [], ?int $perPage = null)
@@ -22,11 +20,11 @@ class ContentTypeRepository implements ContentTypeRepositoryInterface
 
         $query = ContentType::query();
 
-        if (!empty($with)) {
+        if (! empty($with)) {
             $query->with($with);
         }
 
-        if (!empty($filters)) {
+        if (! empty($filters)) {
             foreach ($filters as $field => $value) {
                 $query->where($field, $value);
             }
@@ -48,6 +46,7 @@ class ContentTypeRepository implements ContentTypeRepositoryInterface
     {
         return ContentType::create($data);
     }
+
     public function update(array $data, $id)
     {
         $contentType = ContentType::findOrFail($id);
@@ -59,6 +58,7 @@ class ContentTypeRepository implements ContentTypeRepositoryInterface
     public function delete($id)
     {
         $contentType = $this->getById($id); // Asegura que status sea true y que exista
-        return  $contentType->update(['status' => false]);
+
+        return $contentType->update(['status' => false]);
     }
 }

@@ -18,11 +18,11 @@ class ProgressStatusRepository implements ProgressStatusRepositoryInterface
     {
         $query = ProgressStatus::query();
 
-        if (!empty($with)) {
+        if (! empty($with)) {
             $query->with($with);
         }
 
-        if (!empty($filters)) {
+        if (! empty($filters)) {
             foreach ($filters as $field => $value) {
                 $query->where($field, $value);
             }
@@ -45,12 +45,14 @@ class ProgressStatusRepository implements ProgressStatusRepositoryInterface
     {
         $progressStatus = $this->show($id);
         $progressStatus->update($data);
+
         return $progressStatus->fresh();
     }
 
     public function destroy($id)
     {
         $progressStatus = $this->show($id);
+
         return $progressStatus->update(['status' => false]);
     }
 }

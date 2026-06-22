@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tag extends Model
 {
-
     use Sluggable;
+
     //
     protected $fillable = ['name', 'slug', 'status'];
 
@@ -17,9 +17,9 @@ class Tag extends Model
         return [
             'slug' => [
                 'source' => 'name',
-                'onUpdate' => true
+                'onUpdate' => true,
 
-            ]
+            ],
         ];
     }
 

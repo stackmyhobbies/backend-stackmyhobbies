@@ -9,13 +9,12 @@ use App\Support\TryCatch;
 
 class RegisterService
 {
-
     public function __construct(private RegisterRepositoryInterface $registerRepository) {}
+
     public function store(array $data): User
     {
 
         return TryCatch::handle(function () use ($data) {
-
 
             // Crear el usuario
             $user = $this->registerRepository->store($data);

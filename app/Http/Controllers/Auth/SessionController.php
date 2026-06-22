@@ -11,14 +11,13 @@ use App\Services\Auth\SessionService;
 use App\Support\TryHttpCatch;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 
 class SessionController extends Controller
 {
     //
 
-
     public function __construct(protected SessionService $sessionService) {}
+
     public function store(StoreSessionRequest $request)
     {
         $credentials = $request->validated();
@@ -26,7 +25,6 @@ class SessionController extends Controller
         return TryHttpCatch::handle(
             function () use ($credentials) {
                 $result = $this->sessionService->store($credentials);
-
 
                 // $emailVerified = $result['email_verified'] ?? false;
                 // $user = $result['user'] ?? null;
@@ -62,18 +60,18 @@ class SessionController extends Controller
                 $result = ResponseDTO::from($result);
 
                 // Validación tradicional del email
-                if (!$result->emailVerified) {
+                if (! $result->emailVerified) {
                     $result->errors['email'] = 'Email no verificado';
                 }
 
                 // Si falló
-                if (!$result->success) {
+                if (! $result->success) {
                     return ApiResponseClass::sendError(
                         errors: $result->errors,
                         data: [
                             'user' => $result->user,
                             'token' => $result->token,
-                            ...($result->data ?? [])
+                            ...($result->data ?? []),
                         ],
                         message: $result->message ?? 'Ocurrió un problema',
                         code: Response::HTTP_FORBIDDEN
@@ -83,7 +81,7 @@ class SessionController extends Controller
                 return ApiResponseClass::sendResponse(
                     result: [
                         'user' => new SessionResource($result->user),
-                        'token' => $result->token
+                        'token' => $result->token,
                     ],
                     message: 'Log in Successfully',
                     code: Response::HTTP_OK

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\User;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -20,29 +21,28 @@ class UpdateUserRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         $id = $this->route('id'); // O 'user' si usas {user} en la ruta
 
         return [
-            "first_name" => ['required', 'min:3'],
-            "last_name" => ['required', 'min:3'],
-            "username" => [
+            'first_name' => ['required', 'min:3'],
+            'last_name' => ['required', 'min:3'],
+            'username' => [
                 'required',
                 'min:3',
                 Rule::unique('users', 'username')->ignore($id),
             ],
-            "email" => [
+            'email' => [
                 'required',
                 'email',
                 Rule::unique('users', 'email')->ignore($id),
             ],
-            "password" => ['nullable', 'min:6'],
+            'password' => ['nullable', 'min:6'],
         ];
     }
-
 
     public function attributes()
     {
@@ -60,7 +60,7 @@ class UpdateUserRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success' => false,
             'message' => 'Errores de validación',
-            'errors' => $validator->errors()
+            'errors' => $validator->errors(),
         ], 422));
     }
 }

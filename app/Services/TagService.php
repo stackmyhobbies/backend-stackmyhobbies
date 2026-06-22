@@ -2,18 +2,12 @@
 
 namespace App\Services;
 
-use App\Classes\ApiResponseClass;
 use App\Interfaces\TagRepositoryInterface;
 use App\Support\TryCatch;
-use App\Support\TryHttpCatch;
-use Illuminate\Http\Response;
 
 class TagService
 {
-
-
     public function __construct(private TagRepositoryInterface $tagRepository) {}
-
 
     public function indexForUser()
     {
@@ -40,7 +34,7 @@ class TagService
 
     public function showForUser($slug, $userId)
     {
-        return  TryCatch::handle(
+        return TryCatch::handle(
             function () use ($slug, $userId) {
                 return $this->tagRepository->showForUser($slug, $userId);
             }
