@@ -20,9 +20,10 @@ class ProgressStatusController extends Controller
     {
         return TryHttpCatch::handle(function () {
             $statuses = $this->progressStatusService->indexForUser();
+
             return ApiResponseClass::sendResponse(
                 result: ProgressStatusResource::collection($statuses),
-                message: "statuses loaded successfully",
+                message: 'statuses loaded successfully',
                 code: Response::HTTP_OK
             );
         });
@@ -31,6 +32,7 @@ class ProgressStatusController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('per_page');
+
         return TryHttpCatch::handle(function () use ($perPage) {
             $statuses = $this->progressStatusService->index(null, $perPage);
             $result = $perPage > 0
@@ -39,7 +41,7 @@ class ProgressStatusController extends Controller
 
             return ApiResponseClass::sendResponse(
                 result: $result,
-                message: "statuses loaded successfully",
+                message: 'statuses loaded successfully',
                 code: Response::HTTP_OK
             );
         });
@@ -48,9 +50,10 @@ class ProgressStatusController extends Controller
     public function show($id)
     {
         $status = $this->progressStatusService->show($id);
+
         return ApiResponseClass::sendResponse(
             result: new ProgressStatusResource($status),
-            message: "status loaded successfully",
+            message: 'status loaded successfully',
             code: Response::HTTP_OK
         );
     }
@@ -59,9 +62,10 @@ class ProgressStatusController extends Controller
     {
         return TryHttpCatch::handle(function () use ($request) {
             $status = $this->progressStatusService->store($request->validated());
+
             return ApiResponseClass::sendResponse(
                 result: new ProgressStatusResource($status),
-                message: "status created successfully",
+                message: 'status created successfully',
                 code: Response::HTTP_CREATED
             );
         });
@@ -71,9 +75,10 @@ class ProgressStatusController extends Controller
     {
         return TryHttpCatch::handle(function () use ($request, $id) {
             $status = $this->progressStatusService->update($request->validated(), $id);
+
             return ApiResponseClass::sendResponse(
                 result: new ProgressStatusResource($status),
-                message: "status updated successfully",
+                message: 'status updated successfully',
                 code: Response::HTTP_OK
             );
         });
@@ -83,9 +88,10 @@ class ProgressStatusController extends Controller
     {
         return TryHttpCatch::handle(function () use ($id) {
             $this->progressStatusService->destroy($id);
+
             return ApiResponseClass::sendResponse(
                 result: null,
-                message: "status deleted successfully",
+                message: 'status deleted successfully',
                 code: Response::HTTP_OK
             );
         });

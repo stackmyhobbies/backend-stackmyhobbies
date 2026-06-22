@@ -14,19 +14,17 @@ use Illuminate\Http\Response;
 
 class ContentStatusController extends Controller
 {
-
-
     public function __construct(private ContentStatusService $contentStatusService) {}
-
 
     public function indexForUser()
     {
         return TryHttpCatch::handle(
             function () {
                 $content_statuses = $this->contentStatusService->indexForUser();
+
                 return ApiResponseClass::sendResponse(
                     result: ContentStatusResource::collection($content_statuses),
-                    message: "statuses loaded successfully",
+                    message: 'statuses loaded successfully',
                     code: Response::HTTP_OK
                 );
             }
@@ -49,7 +47,7 @@ class ContentStatusController extends Controller
 
                 return ApiResponseClass::sendResponse(
                     result: $result,
-                    message: "statuses loaded successfully",
+                    message: 'statuses loaded successfully',
                     code: Response::HTTP_OK
                 );
             }
@@ -59,9 +57,10 @@ class ContentStatusController extends Controller
     public function show($id)
     {
         $content_status = $this->contentStatusService->show($id);
+
         return ApiResponseClass::sendResponse(
             result: new ContentStatusResource($content_status),
-            message: "status loaded successfully",
+            message: 'status loaded successfully',
             code: Response::HTTP_OK
         );
     }
@@ -69,18 +68,19 @@ class ContentStatusController extends Controller
     public function store(StoreContentStatusRequest $request)
     {
         $validated = $request->validated();
+
         return TryHttpCatch::handle(
             function () use ($validated) {
                 $content_status = $this->contentStatusService->store($validated);
+
                 return ApiResponseClass::sendResponse(
                     result: new ContentStatusResource($content_status),
-                    message: "status created successfully",
+                    message: 'status created successfully',
                     code: Response::HTTP_CREATED
                 );
             }
         );
     }
-
 
     public function update(UpdateContentStatusRequest $request, $id)
     {
@@ -90,15 +90,15 @@ class ContentStatusController extends Controller
         return TryHttpCatch::handle(
             function () use ($validated, $id) {
                 $content_status = $this->contentStatusService->update($validated, $id);
+
                 return ApiResponseClass::sendResponse(
                     result: new ContentStatusResource($content_status),
-                    message: "status updated successfully",
+                    message: 'status updated successfully',
                     code: Response::HTTP_OK
                 );
             }
         );
     }
-
 
     public function destroy($id)
     {
@@ -106,9 +106,10 @@ class ContentStatusController extends Controller
         return TryHttpCatch::handle(
             function () use ($id) {
                 $this->contentStatusService->destroy($id);
+
                 return ApiResponseClass::sendResponse(
                     result: null,
-                    message: "status deleted successfully",
+                    message: 'status deleted successfully',
                     code: Response::HTTP_OK
                 );
             }

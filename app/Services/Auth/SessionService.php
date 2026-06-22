@@ -2,20 +2,15 @@
 
 namespace App\Services\Auth;
 
-use App\Classes\ApiResponseClass;
 use App\Interfaces\Auth\SessionRepositoryInterface;
 use App\Models\User;
 use App\Support\TryCatch;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
-
 use Illuminate\Support\Facades\Hash;
-
+use Laravel\Sanctum\PersonalAccessToken;
 
 class SessionService
 {
-
     public function __construct(protected SessionRepositoryInterface $sessionRepository) {}
 
     public function store(array $credentials): mixed
@@ -41,7 +36,7 @@ class SessionService
                             'email-verify-resend',
                             ['email:verify:send'], // <- ability autorizada
                             now()->addMinutes(15)
-                        )->plainTextToken
+                        )->plainTextToken,
                     ];
                 }
 
@@ -56,16 +51,16 @@ class SessionService
         );
     }
 
-
     public function destroy(User $user)
     {
         return TryCatch::handle(
             function () use ($user) {
-                /** @var \Laravel\Sanctum\PersonalAccessToken|null $token */
+                /** @var PersonalAccessToken|null $token */
                 $token = $user->currentAccessToken();
 
                 if ($token) {
                     $token->delete();
+
                     return true;
                 }
 

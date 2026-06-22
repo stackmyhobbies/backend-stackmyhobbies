@@ -5,6 +5,7 @@ namespace App\Http\Requests\ContentType;
 use App\Enums\ProgressUnit;
 use App\Enums\SegmentType;
 use App\Enums\SubSegmentType;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -26,7 +27,7 @@ class StoreContentTypeRequest extends FormRequest
             'name' => [
                 'required',
                 'min:3',
-                'unique:content_types,name'
+                'unique:content_types,name',
             ],
             'status' => ['required', 'boolean'],
             'allowed_units' => ['required', 'array', 'min:1'],
@@ -54,11 +55,11 @@ class StoreContentTypeRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success' => false,
             'message' => 'Validation errors',
-            'errors' => $validator->errors()
+            'errors' => $validator->errors(),
         ]));
     }
 
-    //** for sqlite */
+    // ** for sqlite */
     // public function withValidator(Validator $validator)
     // {
     //     $validator->after(function ($validator) {
@@ -77,6 +78,6 @@ class StoreContentTypeRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
 }

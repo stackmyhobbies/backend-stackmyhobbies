@@ -1,5 +1,7 @@
 <?php
+
 // app/Enums/ProgressUnit.php
+
 namespace App\Enums;
 
 enum ProgressUnit: string

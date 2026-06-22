@@ -2,36 +2,35 @@
 
 namespace App\Classes;
 
-use Illuminate\Support\Facades\DB;
-
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class ApiResponseClass
 {
-
-    public static function rollback($e, $message = "Something went wrong!", $statusCode = 500)
+    public static function rollback($e, $message = 'Something went wrong!', $statusCode = 500)
     {
         DB::rollBack();
         self::throw($e, $message, $statusCode);
     }
 
-    //? revisar para otra respuesta
-    public static function throw($e, $message = "Something went wrong!", $code = 500)
+    // ? revisar para otra respuesta
+    public static function throw($e, $message = 'Something went wrong!', $code = 500)
     {
         Log::error($e);
-        throw new HttpResponseException(response()->json(["message" => $message], $code));
+        throw new HttpResponseException(response()->json(['message' => $message], $code));
     }
 
     public static function sendResponse($result, $message, $code = 200)
     {
         $response = [
             'success' => true,
-            'data'    => $result
+            'data' => $result,
         ];
-        if (!empty($message)) {
+        if (! empty($message)) {
             $response['message'] = $message;
         }
+
         return response()->json($response, $code);
     }
 
@@ -42,11 +41,11 @@ class ApiResponseClass
             'message' => $message,
         ];
 
-        if (!empty($errors)) {
+        if (! empty($errors)) {
             $response['errors'] = $errors;
         }
 
-        if (!empty($data)) {
+        if (! empty($data)) {
             $response['data'] = $data;
         }
 

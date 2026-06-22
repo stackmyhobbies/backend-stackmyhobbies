@@ -15,13 +15,13 @@ class SessionResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'         => $this->id,
+            'id' => $this->id,
             'first_name' => $this->first_name,
-            'last_name'  => $this->last_name,
-            'username'   => $this->username,
-            'email'      => $this->email,
-            'is_admin'   => $this->is_admin,
-            'email_verified_at' => $this->email_verified_at
+            'last_name' => $this->last_name,
+            'username' => $this->username,
+            'email' => $this->email,
+            'is_admin' => $this->is_admin,
+            'email_verified_at' => $this->email_verified_at,
         ];
     }
 }

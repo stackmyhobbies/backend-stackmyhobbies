@@ -9,7 +9,7 @@ class SessionRepository implements SessionRepositoryInterface
 {
     protected $active = true;
 
-    public function findByEmailOrUsername(string $login): User|null
+    public function findByEmailOrUsername(string $login): ?User
     {
 
         return User::where('status', $this->active)->where('email', $login)

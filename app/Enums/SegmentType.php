@@ -1,4 +1,5 @@
 <?php
+
 // app/Enums/SegmentType.php
 
 namespace App\Enums;
@@ -20,12 +21,12 @@ enum SegmentType: string
     public function label(): string
     {
         return match ($this) {
-            self::SEASON  => 'Temporada',
-            self::VOLUME  => 'Volumen',
-            self::PART    => 'Parte',
+            self::SEASON => 'Temporada',
+            self::VOLUME => 'Volumen',
+            self::PART => 'Parte',
             self::EDITION => 'Edición',
-            self::MOVIE   => 'Película',
-            self::SINGLE  => 'Single'
+            self::MOVIE => 'Película',
+            self::SINGLE => 'Single'
         };
     }
 
@@ -37,7 +38,7 @@ enum SegmentType: string
             self::PART->value => 'Parte',
             self::EDITION->value => 'Edición',
             self::MOVIE->value => 'Película',
-            self::SINGLE  => 'Single'
+            self::SINGLE => 'Single',
         ];
     }
 }

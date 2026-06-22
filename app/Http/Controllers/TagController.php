@@ -10,7 +10,6 @@ use App\Http\Resources\TagResource;
 use App\Services\TagService;
 use App\Support\PaginationHelper;
 use App\Support\TryHttpCatch;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -24,9 +23,10 @@ class TagController extends Controller
         return TryHttpCatch::handle(
             function () {
                 $tags = $this->tagService->indexForUser();
+
                 return ApiResponseClass::sendResponse(
                     result: TagResource::collection($tags),
-                    message: "Tags loaded successfully",
+                    message: 'Tags loaded successfully',
                     code: Response::HTTP_OK
                 );
             }
@@ -36,6 +36,7 @@ class TagController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('per_page');
+
         return TryHttpCatch::handle(
             function () use ($perPage) {
                 $tags = $this->tagService->index(null, $perPage);
@@ -58,9 +59,11 @@ class TagController extends Controller
     public function store(StoreTagRequest $request)
     {
         $validated = $request->validated();
+
         return TryHttpCatch::handle(
             function () use ($validated) {
                 $tag = $this->tagService->store($validated);
+
                 return ApiResponseClass::sendResponse($tag, 'Eqieuta creada exitosamnete', Response::HTTP_CREATED);
             }
         );
@@ -72,6 +75,7 @@ class TagController extends Controller
     public function show(string $slug)
     {
         $tag = $this->tagService->show($slug);
+
         return ApiResponseClass::sendResponse(new TagResource($tag), 'Tag loaded successfully', Response::HTTP_OK);
     }
 
@@ -99,7 +103,7 @@ class TagController extends Controller
                 ]
                 : ContentItemLiteResource::collection($tag);
 
-            return ApiResponseClass::sendResponse($result, "", 200);
+            return ApiResponseClass::sendResponse($result, '', 200);
         });
     }
 
@@ -109,9 +113,11 @@ class TagController extends Controller
     public function update(UpdateTagRequest $request, string $id)
     {
         $validated = $request->validated();
+
         return TryHttpCatch::handle(
             function () use ($validated, $id) {
                 $tag = $this->tagService->update($validated, $id);
+
                 return ApiResponseClass::sendResponse($tag, 'etiqueta actualizada con exito', Response::HTTP_OK);
             }
         );
@@ -125,6 +131,7 @@ class TagController extends Controller
         return TryHttpCatch::handle(
             function () use ($id) {
                 $this->tagService->destroy($id);
+
                 return ApiResponseClass::sendResponse(null, 'Etiqueta eliminada con éxito', Response::HTTP_OK);
             }
         );

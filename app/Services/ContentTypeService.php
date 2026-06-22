@@ -2,18 +2,12 @@
 
 namespace App\Services;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
-
-use App\Classes\ApiResponseClass;
 use App\Interfaces\ContentTypeRepositoryInterface;
 use App\Support\TryCatch;
 use Illuminate\Database\Eloquent\Collection;
 
 class ContentTypeService
 {
-
     public function __construct(private ContentTypeRepositoryInterface $contentTypeRepository) {}
 
     public function indexForUser(): Collection
@@ -25,7 +19,7 @@ class ContentTypeService
         );
     }
 
-    public function index(?array $filters = [], ?int $perPage)
+    public function index(?array $filters, ?int $perPage)
     {
         return TryCatch::handle(
             function () use ($filters, $perPage) {
@@ -34,13 +28,12 @@ class ContentTypeService
         );
     }
 
-
     public function show($id)
     {
         $contentType = $this->contentTypeRepository->getById($id);
+
         return $contentType;
     }
-
 
     public function store(array $data)
     {
