@@ -39,7 +39,7 @@ FROM php:8.4-fpm-alpine3.20
 
 RUN apk add --no-cache \
     libpng libjpeg-turbo freetype libzip icu-libs oniguruma libpq \
-    caddy ca-certificates curl
+    caddy ca-certificates curl netcat-openbsd
 
 WORKDIR /var/www/html
 COPY --from=builder /var/www/html ./
@@ -47,10 +47,13 @@ COPY --from=builder /php-ext/extensions /usr/local/lib/php/extensions
 COPY --from=builder /php-ext/conf.d /usr/local/etc/php/conf.d
 
 COPY ./docker/php.ini /usr/local/etc/php/conf.d/custom.ini
+COPY ./docker/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 RUN addgroup -g 1000 laravel \
     && adduser -G laravel -g laravel -s /bin/sh -D laravel \
-    && chown -R laravel:laravel /var/www/html
+    && chown -R laravel:laravel /var/www/html \
+    && chmod -R 775 /var/www/html/storage \
+    && chmod -R 775 /var/www/html/bootstrap/cache
 
 COPY ./docker/Caddyfile /etc/caddy/Caddyfile
 COPY ./docker/entrypoint.sh /entrypoint.sh

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Tag;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class TagSeeder extends Seeder
@@ -30,7 +29,7 @@ class TagSeeder extends Seeder
             'Sobrenatural',
             'Misterio',
             'Psicológico',
-            'Suspenso'
+            'Suspenso',
         ];
 
         foreach ($tags as $name) {

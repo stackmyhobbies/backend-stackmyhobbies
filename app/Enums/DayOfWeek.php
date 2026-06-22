@@ -1,5 +1,7 @@
 <?php
+
 // app/Enums/DayOfWeek.php
+
 namespace App\Enums;
 
 enum DayOfWeek: string

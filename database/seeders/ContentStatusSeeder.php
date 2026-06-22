@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\ProgressStatus;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class ContentStatusSeeder extends Seeder
@@ -20,7 +19,7 @@ class ContentStatusSeeder extends Seeder
             'por ver',
             'por estrenar',
             'pausado',
-            'abandonado'
+            'abandonado',
         ];
 
         foreach ($statuses as $name) {

@@ -5,6 +5,7 @@ namespace App\Http\Requests\ContentType;
 use App\Enums\ProgressUnit;
 use App\Enums\SegmentType;
 use App\Enums\SubSegmentType;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -23,7 +24,7 @@ class UpdateContentTypeRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -33,7 +34,7 @@ class UpdateContentTypeRequest extends FormRequest
             'name' => [
                 'required',
                 'min:3',
-                Rule::unique('content_types', 'name')->ignore($id)
+                Rule::unique('content_types', 'name')->ignore($id),
             ],
             'status' => ['required', 'boolean'],
             'allowed_units' => ['required', 'array', 'min:1'],
@@ -61,7 +62,7 @@ class UpdateContentTypeRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success' => false,
             'message' => 'Validation errors',
-            'errors' => $validator->errors()
+            'errors' => $validator->errors(),
         ]));
     }
 }

@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\SendEmailVerificationJob;
+use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
-
 
 class EmailVerificationController extends Controller
 {
@@ -19,7 +18,7 @@ class EmailVerificationController extends Controller
         if ($request->user()->hasVerifiedEmail()) {
             return response()->json([
                 'success' => true,
-                'message' => 'El correo ya está verificado.'
+                'message' => 'El correo ya está verificado.',
             ]);
         }
 
@@ -27,7 +26,7 @@ class EmailVerificationController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Correo de verificación enviado correctamente.'
+            'message' => 'Correo de verificación enviado correctamente.',
         ]);
     }
 
@@ -36,17 +35,17 @@ class EmailVerificationController extends Controller
      */
     public function resendVerificationEmail(Request $request)
     {
-        if (!$request->user()->tokenCan('email:verify:send')) {
+        if (! $request->user()->tokenCan('email:verify:send')) {
             return response()->json([
                 'success' => false,
-                'message' => 'Token no autorizado para esta acción.'
+                'message' => 'Token no autorizado para esta acción.',
             ], 403);
         }
 
         if ($request->user()->hasVerifiedEmail()) {
             return response()->json([
                 'success' => true,
-                'message' => 'El correo ya está verificado.'
+                'message' => 'El correo ya está verificado.',
             ]);
         }
 
@@ -54,7 +53,7 @@ class EmailVerificationController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Correo de verificación reenviado correctamente.'
+            'message' => 'Correo de verificación reenviado correctamente.',
         ]);
     }
 
@@ -63,9 +62,9 @@ class EmailVerificationController extends Controller
      */
     public function verify(Request $request, $id, $hash)
     {
-        $user = \App\Models\User::findOrFail($id);
+        $user = User::findOrFail($id);
 
-        if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+        if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
             return response()->json(['message' => 'Enlace de verificación inválido.'], 400);
         }
 
@@ -77,6 +76,6 @@ class EmailVerificationController extends Controller
             event(new Verified($user));
         }
 
-        return redirect(config('app.frontend_url') . 'auth/email-verified'); // Ejemplo de redirección al frontend
+        return redirect(rtrim(config('app.frontend_url'), '/').'/auth/email-verified');
     }
 }

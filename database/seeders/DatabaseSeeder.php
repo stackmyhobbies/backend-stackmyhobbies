@@ -22,18 +22,18 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         User::create([
-            "first_name" => "Jorge Andres",
-            "last_name" => "Salgado Echeverria",
-            "username" => "jorge019s",
-            "email" => "jasen019@gmail.com",
-            "password" => "123456",
-            "email_verified_at" => Date::now()
+            'first_name' => 'Jorge Andres',
+            'last_name' => 'Salgado Echeverria',
+            'username' => 'jorge019s',
+            'email' => 'jasen019@gmail.com',
+            'password' => '123456',
+            'email_verified_at' => Date::now(),
         ]);
         $this->call([
             TagSeeder::class,
             ContentStatusSeeder::class,
             ContentTypeSeeder::class,
-            ContentItemSeeder::class
+            ContentItemSeeder::class,
         ]);
     }
 }
