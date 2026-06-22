@@ -8,6 +8,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -93,10 +94,24 @@ class ApiExceptionRenderer
             if ($request->is('api/*')) {
                 Log::error($e);
 
-                define('MESSAGE_ERROR', $e->getMessage());
+                if (config('app.debug')) {
+                    return ApiResponseClass::sendError(
+                        $e->getMessage() ?: 'Error interno del servidor',
+                        [
+                            'exception' => get_class($e),
+                            'file' => $e->getFile(),
+                            'line' => $e->getLine(),
+                            'trace' => collect($e->getTrace())
+                                ->map(fn ($trace) => Arr::except($trace, ['args']))
+                                ->take(10)
+                                ->all(),
+                        ],
+                        500
+                    );
+                }
 
                 return ApiResponseClass::sendError(
-                    MESSAGE_ERROR ?: 'Error interno del servidor 500',
+                    'Error interno del servidor',
                     [],
                     500
                 );

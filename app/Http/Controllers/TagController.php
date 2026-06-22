@@ -9,7 +9,6 @@ use App\Http\Resources\ContentItemLiteResource;
 use App\Http\Resources\TagResource;
 use App\Services\TagService;
 use App\Support\PaginationHelper;
-use App\Support\TryHttpCatch;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -20,16 +19,12 @@ class TagController extends Controller
 
     public function indexForUser()
     {
-        return TryHttpCatch::handle(
-            function () {
-                $tags = $this->tagService->indexForUser();
+        $tags = $this->tagService->indexForUser();
 
-                return ApiResponseClass::sendResponse(
-                    result: TagResource::collection($tags),
-                    message: 'Tags loaded successfully',
-                    code: Response::HTTP_OK
-                );
-            }
+        return ApiResponseClass::sendResponse(
+            result: TagResource::collection($tags),
+            message: 'Tags loaded successfully',
+            code: Response::HTTP_OK
         );
     }
 
@@ -37,22 +32,18 @@ class TagController extends Controller
     {
         $perPage = $request->input('per_page');
 
-        return TryHttpCatch::handle(
-            function () use ($perPage) {
-                $tags = $this->tagService->index(null, $perPage);
-                $result = $perPage > 0
-                    ? [
-                        'items' => TagResource::collection($tags),
-                        'meta_data' => PaginationHelper::meta($tags),
-                    ]
-                    : TagResource::collection($tags);
+        $tags = $this->tagService->index(null, $perPage);
+        $result = $perPage > 0
+            ? [
+                'items' => TagResource::collection($tags),
+                'meta_data' => PaginationHelper::meta($tags),
+            ]
+            : TagResource::collection($tags);
 
-                return ApiResponseClass::sendResponse(
-                    result: $result,
-                    message: 'Tags loaded successfully',
-                    code: Response::HTTP_OK
-                );
-            }
+        return ApiResponseClass::sendResponse(
+            result: $result,
+            message: 'Tags loaded successfully',
+            code: Response::HTTP_OK
         );
     }
 
@@ -60,13 +51,9 @@ class TagController extends Controller
     {
         $validated = $request->validated();
 
-        return TryHttpCatch::handle(
-            function () use ($validated) {
-                $tag = $this->tagService->store($validated);
+        $tag = $this->tagService->store($validated);
 
-                return ApiResponseClass::sendResponse($tag, 'Eqieuta creada exitosamnete', Response::HTTP_CREATED);
-            }
-        );
+        return ApiResponseClass::sendResponse($tag, 'Eqieuta creada exitosamnete', Response::HTTP_CREATED);
     }
 
     /**
@@ -90,50 +77,33 @@ class TagController extends Controller
 
     public function showTagWithContentItem(string $slug, Request $request)
     {
-
         $perPage = $request->input('per_page');
         $userId = Auth::user()->id;
 
-        return TryHttpCatch::handle(function () use ($perPage, $userId, $slug) {
-            $tag = $this->tagService->showTagWithContentItem($slug, $userId, $perPage);
-            $result = $perPage > 0
-                ? [
-                    'items' => ContentItemLiteResource::collection($tag),
-                    'meta_data' => PaginationHelper::meta($tag),
-                ]
-                : ContentItemLiteResource::collection($tag);
+        $tag = $this->tagService->showTagWithContentItem($slug, $userId, $perPage);
+        $result = $perPage > 0
+            ? [
+                'items' => ContentItemLiteResource::collection($tag),
+                'meta_data' => PaginationHelper::meta($tag),
+            ]
+            : ContentItemLiteResource::collection($tag);
 
-            return ApiResponseClass::sendResponse($result, '', 200);
-        });
+        return ApiResponseClass::sendResponse($result, '', 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateTagRequest $request, string $id)
     {
         $validated = $request->validated();
 
-        return TryHttpCatch::handle(
-            function () use ($validated, $id) {
-                $tag = $this->tagService->update($validated, $id);
+        $tag = $this->tagService->update($validated, $id);
 
-                return ApiResponseClass::sendResponse($tag, 'etiqueta actualizada con exito', Response::HTTP_OK);
-            }
-        );
+        return ApiResponseClass::sendResponse($tag, 'etiqueta actualizada con exito', Response::HTTP_OK);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        return TryHttpCatch::handle(
-            function () use ($id) {
-                $this->tagService->destroy($id);
+        $this->tagService->destroy($id);
 
-                return ApiResponseClass::sendResponse(null, 'Etiqueta eliminada con éxito', Response::HTTP_OK);
-            }
-        );
+        return ApiResponseClass::sendResponse(null, 'Etiqueta eliminada con éxito', Response::HTTP_OK);
     }
 }
