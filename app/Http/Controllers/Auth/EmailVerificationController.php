@@ -38,11 +38,7 @@ class EmailVerificationController extends Controller
         $user = User::findOrFail($id);
 
         if ($user->hasVerifiedEmail()) {
-            return ApiResponseClass::sendResponse(
-                null,
-                'El correo ya fue verificado.',
-                Response::HTTP_OK
-            );
+            return redirect(rtrim(config('app.frontend_url'), '/').'/auth/already-verified');
         }
 
         $expectedHash = $user->email_verification_token ?? sha1($user->getEmailForVerification());

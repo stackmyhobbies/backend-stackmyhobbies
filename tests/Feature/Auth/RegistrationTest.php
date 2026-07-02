@@ -68,6 +68,21 @@ test('verificacion con token invalido devuelve error', function () {
     expect($user->hasVerifiedEmail())->toBeFalse();
 });
 
+test('verificacion con email ya verificado redirige a la pagina de ya verificado', function () {
+    $user = User::factory()->create([
+        'email_verified_at' => now(),
+    ]);
+
+    $url = URL::temporarySignedRoute(
+        'verification.verify',
+        now()->addMinutes(60),
+        ['id' => $user->id, 'hash' => 'cualquier-hash']
+    );
+
+    $this->get($url)
+        ->assertRedirect(rtrim(config('app.frontend_url'), '/').'/auth/already-verified');
+});
+
 test('verificacion sin token en BD usa hash de email como fallback', function () {
     $user = User::factory()->unverified()->create([
         'email_verification_token' => null,
