@@ -36,7 +36,7 @@ class ApiExceptionRenderer
             if ($request->is('api/*')) {
                 return ApiResponseClass::sendError(
                     'No autenticado',
-                    [],
+                    $e->getMessage(),
                     401
                 );
             }
