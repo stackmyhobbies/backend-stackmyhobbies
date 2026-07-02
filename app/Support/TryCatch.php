@@ -9,21 +9,22 @@ class TryCatch
 {
     public static function handle(Closure $callback, bool $transactional = true)
     {
+        $startedTransaction = $transactional && DB::transactionLevel() === 0;
+
         try {
-            if ($transactional) {
+            if ($startedTransaction) {
                 DB::beginTransaction();
             }
 
             $result = $callback();
 
-            if ($transactional) {
+            if ($startedTransaction) {
                 DB::commit();
             }
 
             return $result;
-        } catch (\Exception $e) {
-
-            if ($transactional) {
+        } catch (\Throwable $e) {
+            if ($startedTransaction) {
                 DB::rollBack();
             }
 

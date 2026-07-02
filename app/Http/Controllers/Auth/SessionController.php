@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\StoreSessionRequest;
 use App\Http\Resources\Auth\SessionResource;
 use App\Services\Auth\SessionService;
-use App\Support\TryHttpCatch;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -22,71 +21,36 @@ class SessionController extends Controller
     {
         $credentials = $request->validated();
 
-        return TryHttpCatch::handle(
-            function () use ($credentials) {
-                $result = $this->sessionService->store($credentials);
+        $result = $this->sessionService->store($credentials);
 
-                // $emailVerified = $result['email_verified'] ?? false;
-                // $user = $result['user'] ?? null;
-                // $token = $result['token'] ?? null;
-                // $success = $result['success'] ?? false;
-                // $message = $result['message'] ?? 'Error desconocido';
+        $result = ResponseDTO::from($result);
 
-                // $errors = [];
-                // $data = [];
+        // Validación tradicional del email
+        if (! $result->emailVerified) {
+            $result->errors['email'] = 'Email no verificado';
+        }
 
-                // // Email no verificado
-                // if (!$emailVerified) {
-                //     $errors['email'] = 'Email no verificado';
-                // }
+        // Si falló
+        if (! $result->success) {
+            return ApiResponseClass::sendError(
+                errors: $result->errors,
+                data: [
+                    'user' => $result->user,
+                    'token' => $result->token,
+                    ...($result->data ?? []),
+                ],
+                message: $result->message ?? 'Ocurrió un problema',
+                code: Response::HTTP_FORBIDDEN
+            );
+        }
 
-                // if ($user) {
-                //     $data["user"] = $user;
-                // }
-
-                // if ($token) {
-                //     $data["token"] = $token;
-                // }
-
-                // if (!$success) {
-                //     return ApiResponseClass::sendError(
-                //         errors: $errors ?: null,
-                //         data: $data ?: null,
-                //         message: $message,
-                //         code: Response::HTTP_FORBIDDEN
-                //     );
-                // }
-
-                $result = ResponseDTO::from($result);
-
-                // Validación tradicional del email
-                if (! $result->emailVerified) {
-                    $result->errors['email'] = 'Email no verificado';
-                }
-
-                // Si falló
-                if (! $result->success) {
-                    return ApiResponseClass::sendError(
-                        errors: $result->errors,
-                        data: [
-                            'user' => $result->user,
-                            'token' => $result->token,
-                            ...($result->data ?? []),
-                        ],
-                        message: $result->message ?? 'Ocurrió un problema',
-                        code: Response::HTTP_FORBIDDEN
-                    );
-                }
-
-                return ApiResponseClass::sendResponse(
-                    result: [
-                        'user' => new SessionResource($result->user),
-                        'token' => $result->token,
-                    ],
-                    message: 'Log in Successfully',
-                    code: Response::HTTP_OK
-                );
-            }
+        return ApiResponseClass::sendResponse(
+            result: [
+                'user' => new SessionResource($result->user),
+                'token' => $result->token,
+            ],
+            message: 'Log in Successfully',
+            code: Response::HTTP_OK
         );
     }
 
@@ -105,24 +69,22 @@ class SessionController extends Controller
 
     public function check(Request $request)
     {
-        return TryHttpCatch::handle(function () use ($request) {
-            $user = $request->user();
+        $user = $request->user();
 
-            if (! $user) {
-                return ApiResponseClass::sendError(
-                    message: 'Token inválido o expirado',
-                    errors: [],
-                    code: Response::HTTP_UNAUTHORIZED
-                );
-            }
-
-            return ApiResponseClass::sendResponse(
-                message: 'Sesión activa',
-                result: [
-                    'user' => new SessionResource($user),
-                ],
-                code: Response::HTTP_OK
+        if (! $user) {
+            return ApiResponseClass::sendError(
+                message: 'Token inválido o expirado',
+                errors: [],
+                code: Response::HTTP_UNAUTHORIZED
             );
-        });
+        }
+
+        return ApiResponseClass::sendResponse(
+            message: 'Sesión activa',
+            result: [
+                'user' => new SessionResource($user),
+            ],
+            code: Response::HTTP_OK
+        );
     }
 }

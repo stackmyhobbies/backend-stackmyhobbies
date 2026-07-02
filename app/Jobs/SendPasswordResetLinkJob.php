@@ -7,8 +7,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Validation\ValidationException;
 
 class SendPasswordResetLinkJob implements ShouldQueue
 {
@@ -18,12 +18,8 @@ class SendPasswordResetLinkJob implements ShouldQueue
 
     public function handle(): void
     {
-        $status = Password::sendResetLink(['email' => $this->email]);
+        DB::table('password_reset_tokens')->where('email', $this->email)->delete();
 
-        if ($status !== Password::RESET_LINK_SENT) {
-            throw ValidationException::withMessages([
-                'email' => [__($status)],
-            ]);
-        }
+        Password::sendResetLink(['email' => $this->email]);
     }
 }

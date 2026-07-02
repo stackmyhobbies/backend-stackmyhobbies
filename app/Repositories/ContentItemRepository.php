@@ -111,7 +111,7 @@ class ContentItemRepository implements ContentItemRepositoryInterface
             }
         }
 
-        return $perPage ? $query->paginate($perPage) : $query->get();
+        return $perPage ? $query->orderBy('updated_at', 'desc')->paginate($perPage) : $query->get();
     }
 
     public function show($slug)

@@ -27,16 +27,17 @@ use Illuminate\Support\Facades\Route;
 Route::post('/auth/sign-in', [SessionController::class, 'store'])->name('login');
 Route::post('/auth/sign-up', RegisterController::class);
 
-Route::post('/auth/forgot-password', ForgotPasswordController::class);
+Route::post('/auth/forgot-password', ForgotPasswordController::class)
+    ->middleware(['throttle:forgot-password']);
 Route::post('/auth/reset-password', ResetPasswordController::class);
 
 Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
     ->middleware(['signed'])
     ->name('verification.verify');
 
-// ! Ruta para reenvío de verificación (requiere token específico)
+// ! Ruta pública para reenvío de verificación
 Route::post('/email/verify/resend', [EmailVerificationController::class, 'resendVerificationEmail'])
-    ->middleware(['auth:sanctum', 'abilities:email:verify:send'])
+    ->middleware(['throttle:verification-resend'])
     ->name('verification.resend');
 
 Route::middleware(['auth:sanctum'])->group(function () {

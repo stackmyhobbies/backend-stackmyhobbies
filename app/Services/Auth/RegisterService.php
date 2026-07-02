@@ -13,13 +13,12 @@ class RegisterService
 
     public function store(array $data): User
     {
-
         return TryCatch::handle(function () use ($data) {
-
-            // Crear el usuario
             $user = $this->registerRepository->store($data);
 
             if ($user) {
+                $user->generateEmailVerificationToken();
+
                 SendEmailVerificationJob::dispatch($user);
             }
 

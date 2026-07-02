@@ -16,7 +16,7 @@ class ContentItemResource extends JsonResource
             'content-item.show.user',
             'content-item.store.user',
             'content-item.update.user',
-        ]);
+        ]) || $request->is('api/admin/*');
 
         return [
             'id' => $this->id,
