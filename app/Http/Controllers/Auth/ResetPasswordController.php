@@ -6,7 +6,6 @@ use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Services\Auth\ResetPasswordService;
-use App\Support\TryHttpCatch;
 use Illuminate\Http\Response;
 
 class ResetPasswordController extends Controller
@@ -17,16 +16,14 @@ class ResetPasswordController extends Controller
 
     public function __invoke(ResetPasswordRequest $request)
     {
-        return TryHttpCatch::handle(function () use ($request) {
-            $validated = $request->validated();
+        $validated = $request->validated();
 
-            $this->resetPasswordService->reset($validated);
+        $this->resetPasswordService->reset($validated);
 
-            return ApiResponseClass::sendResponse(
-                null,
-                'Contraseña restablecida correctamente',
-                Response::HTTP_OK
-            );
-        }, 'Error al restablecer la contraseña');
+        return ApiResponseClass::sendResponse(
+            null,
+            'Contraseña restablecida correctamente',
+            Response::HTTP_OK
+        );
     }
 }

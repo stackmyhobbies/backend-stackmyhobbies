@@ -9,7 +9,6 @@ use App\Http\Resources\ContentItemResource;
 use App\Models\ContentItem;
 use App\Services\ContentItemService;
 use App\Support\PaginationHelper;
-use App\Support\TryHttpCatch;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -31,25 +30,20 @@ class ContentItemController extends Controller
             'search',
             'user_id',
             'content_type',
-            'is_active',
             'progress',
             'tags',
         ]);
 
-        return TryHttpCatch::handle(
-            function () use ($perPage, $filters) {
-                $content_items = $this->contentItemService->index($filters, $perPage);
+        $content_items = $this->contentItemService->index($filters, $perPage);
 
-                $resource = ContentItemResource::collection($content_items);
+        $resource = ContentItemResource::collection($content_items);
 
-                $result = $perPage > 0 ? [
-                    'items' => $resource,
-                    'meta_data' => PaginationHelper::meta($content_items),
-                ] : $resource;
+        $result = $perPage > 0 ? [
+            'items' => $resource,
+            'meta_data' => PaginationHelper::meta($content_items),
+        ] : $resource;
 
-                return ApiResponseClass::sendResponse($result, 'Admin items loaded successfully');
-            }
-        );
+        return ApiResponseClass::sendResponse($result, 'Admin items loaded successfully');
     }
 
     public function indexForUser(Request $request)
@@ -63,21 +57,17 @@ class ContentItemController extends Controller
             'tags',
         ]);
 
-        return TryHttpCatch::handle(
-            function () use ($user_id, $perPage, $filters) {
-                $content_items = $this->contentItemService->indexForUser($user_id, $filters, $perPage);
+        $content_items = $this->contentItemService->indexForUser($user_id, $filters, $perPage);
 
-                $result = $perPage > 0 ? [
-                    'items' => ContentItemResource::collection($content_items),
-                    'meta_data' => PaginationHelper::meta($content_items),
-                ] : ContentItemResource::collection($content_items);
+        $result = $perPage > 0 ? [
+            'items' => ContentItemResource::collection($content_items),
+            'meta_data' => PaginationHelper::meta($content_items),
+        ] : ContentItemResource::collection($content_items);
 
-                return ApiResponseClass::sendResponse(
-                    result: $result,
-                    message: 'items loaded successfully',
-                    code: Response::HTTP_OK
-                );
-            }
+        return ApiResponseClass::sendResponse(
+            result: $result,
+            message: 'items loaded successfully',
+            code: Response::HTTP_OK
         );
     }
 
@@ -88,63 +78,48 @@ class ContentItemController extends Controller
         $user_admin_id = Auth::id();
         $validated = $request->validated();
 
-        return TryHttpCatch::handle(
-            function () use ($user_admin_id, $validated) {
-                $contentItem = $this->contentItemService->store($user_admin_id, $validated);
+        $contentItem = $this->contentItemService->store($user_admin_id, $validated);
 
-                return ApiResponseClass::sendResponse(new ContentItemResource($contentItem), 'items creada exitosamnete', Response::HTTP_CREATED);
-            }
-        );
+        return ApiResponseClass::sendResponse(new ContentItemResource($contentItem), 'items creada exitosamnete', Response::HTTP_CREATED);
     }
 
     public function storeForUser(StoreContentItemRequest $request)
     {
         $this->authorize('create', ContentItem::class);
 
-        $user_id = Auth::id();
-        $validated = $request->validated();
+        $user = $request->user();
+        abort_unless($user, 401);
 
+        $validated = $request->validated();
         $image = $request->file('image');
 
-        return TryHttpCatch::handle(
-            function () use ($user_id, $validated, $image) {
-                $contentItem = $this->contentItemService->storeForUser($user_id, $validated, $image);
+        $contentItem = $this->contentItemService->storeForUser($user->id, $validated, $image);
 
-                return ApiResponseClass::sendResponse(
-                    new ContentItemResource($contentItem),
-                    'Item creado exitosamente',
-                    Response::HTTP_CREATED
-                );
-            }
+        return ApiResponseClass::sendResponse(
+            new ContentItemResource($contentItem),
+            'Item creado exitosamente',
+            Response::HTTP_CREATED
         );
     }
 
     public function show(string $slug)
     {
-        return TryHttpCatch::handle(
-            function () use ($slug) {
-                $content_item = $this->contentItemService->show($slug);
+        $content_item = $this->contentItemService->show($slug);
 
-                $this->authorize('view', $content_item);
+        $this->authorize('view', $content_item);
 
-                return ApiResponseClass::sendResponse(new ContentItemResource($content_item), 'item loaded successfully', Response::HTTP_OK);
-            }
-        );
+        return ApiResponseClass::sendResponse(new ContentItemResource($content_item), 'item loaded successfully', Response::HTTP_OK);
     }
 
     public function showForUser(string $slug)
     {
         $user_id = Auth::id();
 
-        return TryHttpCatch::handle(
-            function () use ($user_id, $slug) {
-                $content_item = $this->contentItemService->showForUser($user_id, $slug);
+        $content_item = $this->contentItemService->showForUser($user_id, $slug);
 
-                $this->authorize('view', $content_item);
+        $this->authorize('view', $content_item);
 
-                return ApiResponseClass::sendResponse(new ContentItemResource($content_item), 'item loaded successfully', Response::HTTP_OK);
-            }
-        );
+        return ApiResponseClass::sendResponse(new ContentItemResource($content_item), 'item loaded successfully', Response::HTTP_OK);
     }
 
     public function update(UpdateContentItemRequest $request, string $id)
@@ -154,33 +129,25 @@ class ContentItemController extends Controller
 
         $validated = $request->validated();
 
-        return TryHttpCatch::handle(
-            function () use ($validated, $contentItem) {
-                $content_item = $this->contentItemService->update($validated, $contentItem);
+        $content_item = $this->contentItemService->update($validated, $contentItem);
 
-                return ApiResponseClass::sendResponse($content_item, 'content item actualizada con exito', Response::HTTP_OK);
-            }
-        );
+        return ApiResponseClass::sendResponse($content_item, 'content item actualizada con exito', Response::HTTP_OK);
     }
 
     public function updateForUser(UpdateContentItemRequest $request, string $id)
     {
-        $user_id = Auth::id();
+        $user = $request->user();
+        abort_unless($user, 401);
 
-        $contentItem = $this->contentItemService->findForUser($user_id, $id);
+        $contentItem = $this->contentItemService->findForUser($user->id, $id);
         $this->authorize('update', $contentItem);
 
         $validated = $request->validated();
-
         $image = $request->file('image');
 
-        return TryHttpCatch::handle(
-            function () use ($validated, $contentItem, $image) {
-                $content_item = $this->contentItemService->updateForUser($validated, $contentItem, $image);
+        $content_item = $this->contentItemService->updateForUser($validated, $contentItem, $image);
 
-                return ApiResponseClass::sendResponse($content_item, 'content_item actualizada con exito', Response::HTTP_OK);
-            }
-        );
+        return ApiResponseClass::sendResponse($content_item, 'content_item actualizada con exito', Response::HTTP_OK);
     }
 
     public function destroy(string $id)
@@ -188,13 +155,9 @@ class ContentItemController extends Controller
         $contentItem = $this->contentItemService->find($id);
         $this->authorize('delete', $contentItem);
 
-        return TryHttpCatch::handle(
-            function () use ($contentItem) {
-                $this->contentItemService->destroy($contentItem);
+        $this->contentItemService->destroy($contentItem);
 
-                return ApiResponseClass::sendResponse(null, 'Content_item eliminada con éxito', Response::HTTP_OK);
-            }
-        );
+        return ApiResponseClass::sendResponse(null, 'Content_item eliminada con éxito', Response::HTTP_OK);
     }
 
     public function destroyForUser(string $id)
@@ -204,12 +167,8 @@ class ContentItemController extends Controller
         $contentItem = $this->contentItemService->findForUser($user_id, $id);
         $this->authorize('delete', $contentItem);
 
-        return TryHttpCatch::handle(
-            function () use ($contentItem) {
-                $this->contentItemService->destroyForUser($contentItem);
+        $this->contentItemService->destroyForUser($contentItem);
 
-                return ApiResponseClass::sendResponse(null, 'Content_item eliminada con éxito', Response::HTTP_OK);
-            }
-        );
+        return ApiResponseClass::sendResponse(null, 'Content_item eliminada con éxito', Response::HTTP_OK);
     }
 }

@@ -2,77 +2,54 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Classes\ApiResponseClass;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\ResendVerificationEmailRequest;
 use App\Jobs\SendEmailVerificationJob;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 
 class EmailVerificationController extends Controller
 {
-    /**
-     * Enviar enlace de verificación
-     */
-    public function sendVerificationEmail(Request $request)
+    public function resendVerificationEmail(ResendVerificationEmailRequest $request): JsonResponse
     {
-        if ($request->user()->hasVerifiedEmail()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'El correo ya está verificado.',
-            ]);
+        $email = $request->validated('email');
+
+        $user = User::where('email', $email)->first();
+
+        if ($user && ! $user->hasVerifiedEmail()) {
+            $user->generateEmailVerificationToken();
+
+            SendEmailVerificationJob::dispatch($user);
         }
 
-        SendEmailVerificationJob::dispatch($request->user());
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Correo de verificación enviado correctamente.',
-        ]);
+        return ApiResponseClass::sendResponse(
+            null,
+            'Si el correo existe en nuestra base de datos, te enviaremos un enlace de verificación.',
+            Response::HTTP_OK
+        );
     }
 
-    /**
-     * Reenviar enlace de verificación (requiere token específico)
-     */
-    public function resendVerificationEmail(Request $request)
-    {
-        if (! $request->user()->tokenCan('email:verify:send')) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Token no autorizado para esta acción.',
-            ], 403);
-        }
-
-        if ($request->user()->hasVerifiedEmail()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'El correo ya está verificado.',
-            ]);
-        }
-
-        SendEmailVerificationJob::dispatch($request->user());
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Correo de verificación reenviado correctamente.',
-        ]);
-    }
-
-    /**
-     * Verificar el correo cuando el usuario hace clic en el enlace
-     */
-    public function verify(Request $request, $id, $hash)
+    public function verify($id, $hash): JsonResponse|RedirectResponse
     {
         $user = User::findOrFail($id);
 
-        if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+        if ($user->hasVerifiedEmail()) {
+            return redirect(rtrim(config('app.frontend_url'), '/').'/auth/already-verified');
+        }
+
+        $expectedHash = $user->email_verification_token ?? sha1($user->getEmailForVerification());
+
+        if (! hash_equals($expectedHash, (string) $hash)) {
             return response()->json(['message' => 'Enlace de verificación inválido.'], 400);
         }
 
-        if ($user->hasVerifiedEmail()) {
-            return response()->json(['message' => 'El correo ya fue verificado.'], 200);
-        }
-
         if ($user->markEmailAsVerified()) {
+            $user->clearEmailVerificationToken();
+
             event(new Verified($user));
         }
 

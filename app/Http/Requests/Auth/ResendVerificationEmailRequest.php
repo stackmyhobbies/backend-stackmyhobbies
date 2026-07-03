@@ -7,30 +7,24 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class ForgotPasswordRequest extends FormRequest
+class ResendVerificationEmailRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
-
         return [
             'email' => ['required', 'email'],
         ];
     }
 
-    public function attributes()
+    public function attributes(): array
     {
         return [
             'email' => 'correo electrónico',
@@ -47,7 +41,6 @@ class ForgotPasswordRequest extends FormRequest
 
     public function failedValidation(Validator $validator)
     {
-
         throw new HttpResponseException(response()->json([
             'success' => false,
             'message' => 'Validation errors',
