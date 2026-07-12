@@ -47,7 +47,7 @@ class ContentTypeSeeder extends Seeder
                 ],
             ],
             [
-                'name' => 'novela gráfica',
+                'name' => 'graphic novel',
                 'status' => true,
                 'allowed_units' => [
                     ProgressUnit::PAGES->value,
@@ -62,7 +62,7 @@ class ContentTypeSeeder extends Seeder
                 ],
             ],
             [
-                'name' => 'novela',
+                'name' => 'novel',
                 'status' => true,
                 'allowed_units' => [
                     ProgressUnit::PAGES->value,
@@ -93,7 +93,7 @@ class ContentTypeSeeder extends Seeder
                 ],
             ],
             [
-                'name' => 'serie',
+                'name' => 'series',
                 'status' => true,
                 'allowed_units' => [
                     ProgressUnit::EPISODES->value,
@@ -107,7 +107,7 @@ class ContentTypeSeeder extends Seeder
                 ],
             ],
             [
-                'name' => 'película',
+                'name' => 'movie',
                 'status' => true,
                 'allowed_units' => [
                     ProgressUnit::MINUTES->value,
@@ -117,10 +117,10 @@ class ContentTypeSeeder extends Seeder
                     SegmentType::PART->value,
                     SegmentType::SINGLE->value,
                 ],
-                'allowed_subsegment_types' => [], // Atómico, no tiene subsegmentos estándar
+                'allowed_subsegment_types' => [],
             ],
             [
-                'name' => 'documental',
+                'name' => 'documentary',
                 'status' => true,
                 'allowed_units' => [
                     ProgressUnit::MINUTES->value,
@@ -140,7 +140,7 @@ class ContentTypeSeeder extends Seeder
 
         foreach ($types as $type) {
             ContentType::updateOrCreate(
-                ['name' => $type['name']], // Único por nombre
+                ['name' => $type['name']],
                 [
                     'status' => $type['status'],
                     'allowed_units' => $type['allowed_units'],
