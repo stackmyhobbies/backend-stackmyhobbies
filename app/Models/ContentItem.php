@@ -49,7 +49,6 @@ class ContentItem extends Model
         'thumbnail_url',
         'detail_url',
         'progress_percentage',
-        'segment_label',
     ];
 
     // En tu modelo ContentItem.php
@@ -89,15 +88,6 @@ class ContentItem extends Model
         }
 
         return null;
-    }
-
-    public function getSegmentLabelAttribute(): ?string
-    {
-        $label = $this->segment_type ? $this->segment_type->label() : null;
-
-        return $label && $this->segment_number
-            ? "{$label} {$this->segment_number}"
-            : null;
     }
 
     // Método para convertir el enum a string para el slug
