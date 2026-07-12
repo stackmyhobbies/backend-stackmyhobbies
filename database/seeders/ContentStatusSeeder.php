@@ -13,13 +13,16 @@ class ContentStatusSeeder extends Seeder
     public function run(): void
     {
         $statuses = [
-            'en emisión',
-            'finalizado',
-            'viendo',
-            'por ver',
-            'por estrenar',
-            'pausado',
-            'abandonado',
+            // Media status
+            'Airing',
+            'Finished',
+            'Upcoming',
+
+            // User progress status
+            'Watching',
+            'Plan to Watch',
+            'On Hold',
+            'Dropped',
         ];
 
         foreach ($statuses as $name) {

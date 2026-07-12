@@ -16,15 +16,12 @@ class ContentItemSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Cargamos los tipos de contenido (mapeo por nombre para evitar IDs mágicos)
         $anime = ContentType::where('name', 'anime')->firstOrFail();
         $manga = ContentType::where('name', 'manga')->firstOrFail();
-        $movie = ContentType::where('name', 'película')->firstOrFail();
+        $movie = ContentType::where('name', 'movie')->firstOrFail();
 
-        // 2. Cargamos los estados (mapeo por nombre para evitar IDs mágicos)
-        $status = ProgressStatus::pluck('id', 'name'); // Esto crea un array tipo: ['Viendo' => 3, 'Finalizado' => 2...]
+        $status = ProgressStatus::pluck('id', 'name');
 
-        // 3. Cargamos los tags (mapeo por nombre)
         $tags = Tag::pluck('id', 'name');
 
         $items = [
@@ -32,7 +29,7 @@ class ContentItemSeeder extends Seeder
                 'title' => 'One Piece',
                 'description' => 'Aventura pirata de larga duración.',
                 'content_type_id' => $anime->id,
-                'progress_status_id' => $status['viendo'],
+                'progress_status_id' => $status['Watching'],
                 'viewing_started_at' => '2023-02-01 00:00:00',
                 'viewing_finished_at' => null,
                 'current_progress' => 1075,
@@ -41,7 +38,7 @@ class ContentItemSeeder extends Seeder
                 'rating' => 10,
                 'notes' => 'Aún en emisión.',
                 'is_active' => true,
-                'tag_names' => ['shonen', 'aventura', 'acción'],
+                'tag_names' => ['shonen', 'adventure', 'action'],
                 'segment_type' => SegmentType::SEASON->value,
                 'segment_number' => 20,
             ],
@@ -49,7 +46,7 @@ class ContentItemSeeder extends Seeder
                 'title' => 'Death Note',
                 'description' => 'El poder de un cuaderno mortal.',
                 'content_type_id' => $anime->id,
-                'progress_status_id' => $status['finalizado'],
+                'progress_status_id' => $status['Finished'],
                 'viewing_started_at' => '2022-05-01 00:00:00',
                 'viewing_finished_at' => '2022-06-01 00:00:00',
                 'current_progress' => 37,
@@ -58,7 +55,7 @@ class ContentItemSeeder extends Seeder
                 'rating' => 9,
                 'notes' => 'Obra maestra psicológica.',
                 'is_active' => true,
-                'tag_names' => ['psicológico', 'suspenso', 'acción'],
+                'tag_names' => ['psychological', 'thriller', 'action'],
                 'segment_type' => SegmentType::SEASON->value,
                 'segment_number' => 1,
             ],
@@ -66,7 +63,7 @@ class ContentItemSeeder extends Seeder
                 'title' => 'Berserk',
                 'description' => 'Oscuridad, sangre y espadas.',
                 'content_type_id' => $manga->id,
-                'progress_status_id' => $status['pausado'],
+                'progress_status_id' => $status['On Hold'],
                 'viewing_started_at' => '2021-01-01 00:00:00',
                 'viewing_finished_at' => null,
                 'current_progress' => 50,
@@ -75,7 +72,7 @@ class ContentItemSeeder extends Seeder
                 'rating' => 8,
                 'notes' => 'Crudo y profundo.',
                 'is_active' => true,
-                'tag_names' => ['terror', 'acción', 'drama'],
+                'tag_names' => ['horror', 'action', 'drama'],
                 'segment_type' => SegmentType::VOLUME->value,
                 'segment_number' => 8,
                 'segment_subtype' => SubSegmentType::CHAPTER->value,
@@ -85,7 +82,7 @@ class ContentItemSeeder extends Seeder
                 'title' => 'Jujutsu Kaisen',
                 'description' => 'Exorcistas luchando contra maldiciones.',
                 'content_type_id' => $anime->id,
-                'progress_status_id' => $status['en emisión'],
+                'progress_status_id' => $status['Airing'],
                 'viewing_started_at' => '2023-07-01 00:00:00',
                 'viewing_finished_at' => null,
                 'current_progress' => 12,
@@ -94,7 +91,7 @@ class ContentItemSeeder extends Seeder
                 'rating' => 8,
                 'notes' => '',
                 'is_active' => true,
-                'tag_names' => ['shonen', 'acción', 'sobrenatural'],
+                'tag_names' => ['shonen', 'action', 'supernatural'],
                 'segment_type' => SegmentType::SEASON->value,
                 'segment_number' => 2,
             ],
@@ -102,7 +99,7 @@ class ContentItemSeeder extends Seeder
                 'title' => 'Spirited Away',
                 'description' => 'Una niña entra a un mundo mágico.',
                 'content_type_id' => $movie->id,
-                'progress_status_id' => $status['finalizado'],
+                'progress_status_id' => $status['Finished'],
                 'viewing_started_at' => '2022-10-10 00:00:00',
                 'viewing_finished_at' => '2022-10-10 00:00:00',
                 'current_progress' => 120,
@@ -111,7 +108,7 @@ class ContentItemSeeder extends Seeder
                 'rating' => 10,
                 'notes' => 'Hermosa y emotiva.',
                 'is_active' => true,
-                'tag_names' => ['fantasia', 'aventura', 'drama'],
+                'tag_names' => ['fantasy', 'adventure', 'drama'],
                 'segment_type' => SegmentType::MOVIE->value,
                 'segment_number' => 1,
             ],
@@ -119,7 +116,7 @@ class ContentItemSeeder extends Seeder
                 'title' => 'Tokyo Ghoul',
                 'description' => 'Híbridos humanos y ghouls.',
                 'content_type_id' => $anime->id,
-                'progress_status_id' => $status['abandonado'],
+                'progress_status_id' => $status['Dropped'],
                 'viewing_started_at' => '2021-03-01 00:00:00',
                 'viewing_finished_at' => '2021-06-01 00:00:00',
                 'current_progress' => 12,
@@ -128,7 +125,7 @@ class ContentItemSeeder extends Seeder
                 'rating' => 7,
                 'notes' => 'Oscuro e intrigante.',
                 'is_active' => true,
-                'tag_names' => ['terror', 'suspenso', 'acción'],
+                'tag_names' => ['horror', 'thriller', 'action'],
                 'segment_type' => SegmentType::SEASON->value,
                 'segment_number' => 1,
             ],
@@ -136,7 +133,7 @@ class ContentItemSeeder extends Seeder
                 'title' => 'Mob Psycho 100',
                 'description' => 'Poder psíquico y adolescencia.',
                 'content_type_id' => $anime->id,
-                'progress_status_id' => $status['viendo'],
+                'progress_status_id' => $status['Watching'],
                 'viewing_started_at' => '2022-09-01 00:00:00',
                 'viewing_finished_at' => null,
                 'current_progress' => 8,
@@ -145,7 +142,7 @@ class ContentItemSeeder extends Seeder
                 'rating' => 8,
                 'notes' => 'Sorprendente animación.',
                 'is_active' => true,
-                'tag_names' => ['acción', 'comedia', 'sobrenatural'],
+                'tag_names' => ['action', 'comedy', 'supernatural'],
                 'segment_type' => SegmentType::SEASON->value,
                 'segment_number' => 3,
             ],
@@ -153,7 +150,7 @@ class ContentItemSeeder extends Seeder
                 'title' => 'Vinland Saga',
                 'description' => 'Vikingos, guerra y redención.',
                 'content_type_id' => $anime->id,
-                'progress_status_id' => $status['finalizado'],
+                'progress_status_id' => $status['Finished'],
                 'viewing_started_at' => '2023-01-01 00:00:00',
                 'viewing_finished_at' => '2023-06-01 00:00:00',
                 'current_progress' => 24,
@@ -162,7 +159,7 @@ class ContentItemSeeder extends Seeder
                 'rating' => 9,
                 'notes' => 'Historia madura y realista.',
                 'is_active' => true,
-                'tag_names' => ['aventura', 'drama', 'acción'],
+                'tag_names' => ['adventure', 'drama', 'action'],
                 'segment_type' => SegmentType::SEASON->value,
                 'segment_number' => 2,
             ],
@@ -174,11 +171,9 @@ class ContentItemSeeder extends Seeder
 
             $item['user_id'] = 1;
 
-            // Generar el slug manualmente
             $slug = Str::slug($item['title'].' '.$item['segment_type'].' '.$item['segment_number']);
             $item['slug'] = $slug;
 
-            // Usar updateOrCreate para evitar duplicados
             $content = ContentItem::updateOrCreate(
                 [
                     'user_id' => $item['user_id'],
@@ -189,7 +184,6 @@ class ContentItemSeeder extends Seeder
                 $item
             );
 
-            // Asociar los tags por nombre
             $tagIds = [];
             foreach ($tagNames as $tagName) {
                 $tag = Tag::where('name', $tagName)->firstOrFail();

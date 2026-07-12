@@ -15,16 +15,4 @@ enum SubSegmentType: string
     {
         return array_column(self::cases(), 'value');
     }
-
-    public function label(): string
-    {
-        return match ($this) {
-            self::CHAPTER => __('Capítulo'),
-            self::EPISODE => __('Episodio'),
-            self::PAGE => __('Página'),
-            self::OVA => __('OVA'),
-            self::SPECIAL => __('Especial'),
-            self::PART => __('Parte'),
-        };
-    }
 }
