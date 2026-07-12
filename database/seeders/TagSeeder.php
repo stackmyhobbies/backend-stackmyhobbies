@@ -13,23 +13,51 @@ class TagSeeder extends Seeder
     public function run(): void
     {
         $tags = [
+            // Demographics
             'Shonen',
             'Seinen',
             'Shojo',
             'Josei',
-            'Acción',
-            'Aventura',
-            'Terror',
-            'Horror',
-            'Comedia',
-            'Romance',
-            'Fantasia',
-            'Ciencia ficción',
+            'Kids',
+
+            // Main Genres
+            'Action',
+            'Adventure',
+            'Comedy',
             'Drama',
-            'Sobrenatural',
-            'Misterio',
-            'Psicológico',
-            'Suspenso',
+            'Fantasy',
+            'Horror',
+            'Mystery',
+            'Romance',
+            'Sci-Fi',
+            'Supernatural',
+            'Thriller',
+            'Psychological',
+
+            // Subgenres & Themes
+            'Isekai',
+            'Mecha',
+            'Slice of Life',
+            'Iyashikei',
+            'Sports',
+            'Music',
+            'Cyberpunk',
+            'Steampunk',
+            'Post-Apocalyptic',
+            'Super Power',
+            'Martial Arts',
+            'Historical',
+            'Military',
+            'Space',
+            'Ecchi',
+            'Harem',
+            'Reverse Harem',
+            'School',
+            'Vampire',
+            'Zombies',
+            'Gore',
+            'Parody',
+            'Survival',
         ];
 
         foreach ($tags as $name) {

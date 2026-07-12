@@ -21,7 +21,6 @@ class ContentItemResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'segment_label' => $this->segment_label,
             'thumbnail_url' => $this->thumbnail_url,
             'detail_url' => $this->when($isDetail, $this->detail_url),
 

@@ -15,14 +15,4 @@ enum ProgressUnit: string
     {
         return array_column(self::cases(), 'value');
     }
-
-    public function label(): string
-    {
-        return match ($this) {
-            self::EPISODES => __('Episodios'),
-            self::PAGES => __('Páginas'),
-            self::MINUTES => __('Minutos'),
-            self::CHAPTERS => __('Capítulos')
-        };
-    }
 }
