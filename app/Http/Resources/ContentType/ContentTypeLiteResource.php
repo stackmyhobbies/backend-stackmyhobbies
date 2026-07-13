@@ -17,6 +17,8 @@ class ContentTypeLiteResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }
 }

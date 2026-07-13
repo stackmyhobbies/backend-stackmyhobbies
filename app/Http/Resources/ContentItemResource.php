@@ -22,6 +22,8 @@ class ContentItemResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'thumbnail_url' => $this->thumbnail_url,
+            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'detail_url' => $this->when($isDetail, $this->detail_url),
 
             // Datos de progreso (Los usas en la tabla)
