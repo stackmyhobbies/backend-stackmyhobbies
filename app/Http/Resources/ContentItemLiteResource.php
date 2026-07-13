@@ -16,6 +16,8 @@ class ContentItemLiteResource extends JsonResource
             'slug' => $this->slug,
             'description' => $this->description,
             'image_url' => $this->thumbnail_url,
+            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }
 }

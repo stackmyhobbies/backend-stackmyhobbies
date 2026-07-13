@@ -37,11 +37,11 @@ echo ">>> Ajustando permisos de storage..."
 chown -R laravel:laravel /var/www/html/storage /var/www/html/bootstrap/cache
 chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-echo ">>> Ejecutando migraciones..."
-php artisan migrate --force
+# echo ">>> Ejecutando migraciones..."
+# php artisan migrate --force
 
-# echo ">>> Ejecutando migraciones con refresh..."
-# php artisan migrate:refresh --force
+echo ">>> Ejecutando migraciones con refresh..."
+php artisan migrate:refresh --seed --force
 
 echo ">>> Limpiando caches..."
 php artisan config:clear
