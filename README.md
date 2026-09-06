@@ -2,6 +2,22 @@
 
 API REST para la gestión de hobbies (content items), usuarios, tipos de contenido, tags y estados de progreso. Construida con Laravel 12 y autenticación vía Sanctum.
 
+## Stack Tecnológico
+
+| Categoría                | Tecnología                                      |
+|--------------------------|-------------------------------------------------|
+| **Lenguaje**             | PHP 8.2+                                        |
+| **Framework**            | Laravel 12                                      |
+| **Base de datos**        | PostgreSQL / SQLite (desarrollo)                |
+| **Autenticación**        | Laravel Sanctum                                 |
+| **Colas**                | Redis + Laravel Horizon                         |
+| **Almacenamiento**       | Cloudinary                                      |
+| **Email**                | Mailjet                                         |
+| **Testing**              | Pest + PHPUnit                                  |
+| **Formateo**             | Laravel Pint                                    |
+| **Frontend (bundling)**  | Vite                                            |
+| **DevOps**               | Laravel Sail (Docker), Laravel Telescope        |
+
 ## Requisitos
 
 - PHP 8.2+
