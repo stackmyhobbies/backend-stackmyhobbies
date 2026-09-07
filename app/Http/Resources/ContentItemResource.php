@@ -35,6 +35,7 @@ class ContentItemResource extends JsonResource
             // Segmentación técnica (para la etiqueta de la fila en el listado)
             'segment_type' => $this->segment_type,
             'segment_number' => $this->segment_number,
+            'day_of_week' => $this->day_of_week?->value,
 
             // Relaciones (Siempre que estén cargadas con eager loading)
             'tags' => $this->whenLoaded('tags', fn () => $this->tags->map(fn ($tag) => [
@@ -64,7 +65,6 @@ class ContentItemResource extends JsonResource
             'segment_subnumber' => $this->when($isDetail, $this->segment_subnumber),
 
             'is_active' => $this->when($isDetail, $this->is_active),
-            'day_of_week' => $this->when($isDetail, $this->day_of_week?->value),
         ];
     }
 }
