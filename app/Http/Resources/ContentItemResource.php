@@ -16,6 +16,7 @@ class ContentItemResource extends JsonResource
             'content-item.show.user',
             'content-item.store.user',
             'content-item.update.user',
+            'content-item.progress.update.user',
         ]) || $request->is('api/admin/*');
 
         return [
