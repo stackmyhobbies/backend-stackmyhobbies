@@ -173,6 +173,13 @@ class ContentItemRepository implements ContentItemRepositoryInterface
         return $contentItem->fresh();
     }
 
+    public function updateProgressForUser(array $data, ContentItem $contentItem): ContentItem
+    {
+        $contentItem->update($data);
+
+        return $contentItem->fresh();
+    }
+
     public function destroy(ContentItem $contentItem): ContentItem
     {
         $contentItem->update(['is_active' => ! $this->active]);

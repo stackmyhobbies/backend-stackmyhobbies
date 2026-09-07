@@ -200,6 +200,18 @@ class ContentItemService
         });
     }
 
+    public function updateProgressForUser(int $currentProgress, ContentItem $contentItem): ContentItem
+    {
+        return TryCatch::handle(function () use ($currentProgress, $contentItem) {
+            $contentItem = $this->contentItemRepository->updateProgressForUser(
+                ['current_progress' => $currentProgress],
+                $contentItem
+            );
+
+            return $contentItem->load(['tags', 'contentType', 'progressStatus']);
+        });
+    }
+
     public function destroy(ContentItem $contentItem): ContentItem
     {
         return TryCatch::handle(function () use ($contentItem) {
