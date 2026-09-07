@@ -66,6 +66,11 @@ class ContentItemRepository implements ContentItemRepositoryInterface
                 });
             }
 
+            if (isset($filters['day_of_week']) && ! empty($filters['day_of_week'])) {
+                $days = $this->normalizeFilterValues($filters['day_of_week']);
+                $query->whereIn('day_of_week', $days);
+            }
+
             if (isset($filters['user_id'])) {
                 $query->where('user_id', $filters['user_id']);
             }
@@ -108,6 +113,11 @@ class ContentItemRepository implements ContentItemRepositoryInterface
                 $query->whereHas('tags', function ($q) use ($tagSlugs) {
                     $q->whereIn('tags.slug', $tagSlugs);
                 });
+            }
+
+            if (isset($filters['day_of_week']) && ! empty($filters['day_of_week'])) {
+                $days = $this->normalizeFilterValues($filters['day_of_week']);
+                $query->whereIn('day_of_week', $days);
             }
         }
 
