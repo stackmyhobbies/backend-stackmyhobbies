@@ -26,6 +26,8 @@ interface ContentItemRepositoryInterface
 
     public function updateForUser(array $data, ContentItem $contentItem): ContentItem;
 
+    public function updateProgressForUser(array $data, ContentItem $contentItem): ContentItem;
+
     public function destroy(ContentItem $contentItem): ContentItem;
 
     public function destroyForUser(ContentItem $contentItem): ContentItem;

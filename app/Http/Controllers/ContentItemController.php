@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Classes\ApiResponseClass;
 use App\Http\Requests\ContentItem\StoreContentItemRequest;
+use App\Http\Requests\ContentItem\UpdateContentItemProgressRequest;
 use App\Http\Requests\ContentItem\UpdateContentItemRequest;
 use App\Http\Resources\ContentItemResource;
 use App\Models\ContentItem;
@@ -150,6 +151,26 @@ class ContentItemController extends Controller
         $content_item = $this->contentItemService->updateForUser($validated, $contentItem, $image);
 
         return ApiResponseClass::sendResponse($content_item, 'content_item actualizada con exito', Response::HTTP_OK);
+    }
+
+    public function updateProgressForUser(UpdateContentItemProgressRequest $request, string $id)
+    {
+        $user = $request->user();
+        abort_unless($user, 401);
+
+        $contentItem = $this->contentItemService->findForUser($user->id, $id);
+        $this->authorize('update', $contentItem);
+
+        $contentItem = $this->contentItemService->updateProgressForUser(
+            $request->validated()['current_progress'],
+            $contentItem
+        );
+
+        return ApiResponseClass::sendResponse(
+            new ContentItemResource($contentItem),
+            'Progreso actualizado correctamente',
+            Response::HTTP_OK
+        );
     }
 
     public function destroy(string $id)

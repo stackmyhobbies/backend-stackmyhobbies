@@ -49,6 +49,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/content-items', [ContentItemController::class, 'indexForUser'])->name('content-item.index.user');
     Route::post('/content-items', [ContentItemController::class, 'storeForUser'])->name('content-item.store.user');
     Route::put('/content-items/{id}/edit', [ContentItemController::class, 'updateForUser'])->name('content-item.update.user');
+    Route::patch('/content-items/{id}/progress', [ContentItemController::class, 'updateProgressForUser'])
+        ->middleware('throttle:60,1')
+        ->name('content-item.progress.update.user');
 
     // *TODO PENDIENTE , ORGANIZAR EL SHOW
     Route::get('/content-items/{slug}', [ContentItemController::class, 'showForUser'])->name('content-item.show.user');
