@@ -32,6 +32,10 @@ class ContentItemResource extends JsonResource
             'progress_percent' => $this->progress_percentage,
             'progress_unit' => $this->progress_unit->value ?? null,
 
+            // Segmentación técnica (para la etiqueta de la fila en el listado)
+            'segment_type' => $this->segment_type,
+            'segment_number' => $this->segment_number,
+
             // Relaciones (Siempre que estén cargadas con eager loading)
             'tags' => $this->whenLoaded('tags', fn () => $this->tags->map(fn ($tag) => [
                 'id' => $tag->id,
@@ -55,9 +59,7 @@ class ContentItemResource extends JsonResource
             'aired_from' => $this->when($isDetail, $this->aired_from?->toDateString()),
             'aired_to' => $this->when($isDetail, $this->aired_to?->toDateString()),
 
-            // Segmentación técnica (ya tienes el label en el index)
-            'segment_type' => $this->when($isDetail, $this->segment_type),
-            'segment_number' => $this->when($isDetail, $this->segment_number),
+            // Segmentación avanzada (solo detalle)
             'segment_subtype' => $this->when($isDetail, $this->segment_subtype),
             'segment_subnumber' => $this->when($isDetail, $this->segment_subnumber),
 
