@@ -32,6 +32,7 @@ class ContentItemController extends Controller
             'content_type',
             'progress',
             'tags',
+            'day_of_week',
         ]);
 
         $content_items = $this->contentItemService->index($filters, $perPage);
@@ -55,6 +56,7 @@ class ContentItemController extends Controller
             'content_type',
             'progress',
             'tags',
+            'day_of_week',
         ]);
 
         $content_items = $this->contentItemService->indexForUser($user_id, $filters, $perPage);
